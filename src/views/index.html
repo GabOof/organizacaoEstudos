@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organizador de Estudos</title>
+  </head>
+  <body>
+    <h1>Organizador de Estudos</h1>
+    <form id="study-form">
+      <input type="text" id="materia" placeholder="Matéria" required />
+      <input
+        type="number"
+        id="prioridade"
+        placeholder="Prioridade (1-3)"
+        required
+      />
+      <input
+        type="number"
+        id="tempo"
+        placeholder="Tempo Estimado (horas)"
+        required
+      />
+      <button type="submit">Adicionar Matéria</button>
+    </form>
+    <button id="gerar-cronograma">Gerar Cronograma</button>
+    <ul id="cronograma"></ul>
+
+    <script type="module" src="../main.js"></script>
+  </body>
+</html>
