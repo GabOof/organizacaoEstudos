@@ -1,3 +1,10 @@
-class Estudante {}
+const mongoose = require("mongoose");
 
-export default Estudante;
+const estudanteSchema = new mongoose.Schema({
+  nome: { type: String, required: true },
+  tempoDisponivel: { type: Number, required: true },
+});
+
+const Estudante = mongoose.model("Estudante", estudanteSchema);
+
+module.exports = Estudante;
