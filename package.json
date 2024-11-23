@@ -1,0 +1,17 @@
+{
+  "name": "organizacaoestudos",
+  "version": "1.0.0",
+  "description": "## **Descrição** Este projeto é um sistema simples para ajudar estudantes a organizarem seu tempo de estudo de forma eficiente. Ele utiliza uma **Arquitetura em Camadas** e é desenvolvido em **JavaScript**, abordando conceitos de boas práticas como os **princípios SOLID**.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "mongodb": "^6.11.0",
+    "mongoose": "^8.8.2"
+  }
+}
