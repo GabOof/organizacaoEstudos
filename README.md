@@ -8,7 +8,7 @@ Este projeto é um sistema simples para ajudar estudantes a organizarem seu temp
 
 1. Cadastro de matérias com prioridade e tempo estimado de estudo.
 2. Geração de um cronograma sugerido com base no tempo disponível do estudante.
-3. Interface de testes via API (utilizando Postman ou similar).
+3. Interface web (utilizando [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) ou similar).
 
 ---
 
@@ -24,8 +24,12 @@ src/
 |   └── materiaDAO.js
 ├── models/               # Camada de Modelo (abstração do domínio)
 │   ├── cronograma.js
-│   ├── estudante.js         
-│   └── materia.js      
+│   ├── estudante.js
+│   └── materia.js
+├── view/               # Camada de Visualização (interface web)
+│   ├── index.html
+│   ├── script.js
+│   └── styles.css
 ├── main.js               # Arquivo principal (servidor)
 └── package.json          # Dependências do projeto
 ```
@@ -66,7 +70,29 @@ src/
 
    O servidor estará rodando em `http://localhost:3000`.
 
+5. **Acesse a interface web:**
+   Abra o arquivo `index.html` na pasta `view` em seu navegador ou utilize um servidor local como o [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) do Visual Studio Code.
+
 ---
+
+## **Como Usar (Utilizando a Interface Web)**
+
+### **1. Cadastro de Estudante**
+
+- **Nome do Estudante**: Insira o nome do estudante.
+- **Tempo Disponível**: Informe o tempo disponível do estudante em horas.
+
+### **2. Cadastro de Matérias**
+
+- **Nome da Matéria**: Insira o nome da matéria.
+- **Prioridade**: Selecione a prioridade da matéria.
+- **Tempo Estimado**: Informe o tempo estimado de estudo da matéria em horas.
+
+### **3. Gerar Cronograma**
+
+- **Estudante**: Selecione o nome do estudante cadastrado.
+- **Gerar Cronograma**: Clique no botão para gerar o cronograma de estudos.
+- **Cronograma Gerado**: O cronograma será exibido na tela com as matérias e o tempo alocado para cada uma.
 
 ## **Como Usar (Testando via Postman)**
 
@@ -193,9 +219,3 @@ src/
 ## **Contribuições**
 
 Sinta-se à vontade para abrir _issues_ ou enviar _pull requests_. Sugestões e melhorias são bem-vindas!
-
----
-
-### **Considerações Finais**
-
-Agora você tem um sistema simples, organizado e baseado em **API** para organizar os estudos dos estudantes. Teste a aplicação via **Postman** para garantir que as rotas estão funcionando corretamente e que o cronograma é gerado com base nas matérias cadastradas.
