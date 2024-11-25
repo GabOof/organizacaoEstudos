@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const { connectDB } = require("./src/data/dataAccess");
 const EstudanteDAO = require("./src/data/estudanteDAO");
 const MateriaDAO = require("./src/data/materiaDAO");
@@ -9,6 +10,9 @@ connectDB();
 
 const app = express(); // Inicialização da aplicação Express
 const port = 3000; // Definição da porta para o servidor
+
+// Habilita CORS para todas as origens
+app.use(cors());
 
 // Middleware para interpretar JSON no corpo das requisições
 app.use(express.json());
