@@ -1,51 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Configurações básicas da página -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestão de Cronograma</title>
+    <!-- Link para o arquivo de estilos externo -->
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Gestão de Cronograma</h1>
+    <!-- Cabeçalho com título e descrição -->
+    <header>
+      <h1>Gestão de Cronograma</h1>
+      <p>Organize suas matérias e maximize seu tempo de estudo!</p>
+    </header>
 
-    <!-- Formulário para criar um estudante -->
-    <section>
-      <h2>Criar Estudante</h2>
-      <form id="form-estudante">
-        <label for="nome-estudante">Nome:</label>
-        <input type="text" id="nome-estudante" required />
-        <label for="tempo-disponivel">Tempo Disponível (horas):</label>
-        <input type="number" id="tempo-disponivel" required />
-        <button type="submit">Salvar Estudante</button>
-      </form>
-    </section>
+    <!-- Conteúdo principal da página -->
+    <main>
+      <!-- Seção para criar um estudante -->
+      <section class="card">
+        <h2>Criar Estudante</h2>
+        <form id="form-estudante">
+          <div class="form-group">
+            <label for="nome-estudante">Nome:</label>
+            <input
+              type="text"
+              id="nome-estudante"
+              placeholder="Digite o nome do estudante"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tempo-disponivel">Tempo Disponível (horas):</label>
+            <input
+              type="number"
+              id="tempo-disponivel"
+              placeholder="Ex: 10"
+              required
+            />
+          </div>
+          <!-- Botão para enviar o formulário -->
+          <button type="submit" class="btn">Salvar Estudante</button>
+        </form>
+      </section>
 
-    <!-- Formulário para criar uma matéria -->
-    <section>
-      <h2>Criar Matéria</h2>
-      <form id="form-materia">
-        <label for="nome-materia">Nome:</label>
-        <input type="text" id="nome-materia" required />
-        <label for="prioridade">Prioridade (1-5):</label>
-        <input type="number" id="prioridade" min="1" max="5" required />
-        <label for="tempo-estimado">Tempo Estimado (horas):</label>
-        <input type="number" id="tempo-estimado" required />
-        <button type="submit">Salvar Matéria</button>
-      </form>
-    </section>
+      <!-- Seção para cadastrar uma nova matéria -->
+      <section class="card">
+        <h2>Criar Matéria</h2>
+        <form id="form-materia">
+          <div class="form-group">
+            <label for="nome-materia">Nome:</label>
+            <input
+              type="text"
+              id="nome-materia"
+              placeholder="Digite o nome da matéria"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="prioridade">Prioridade (1-5):</label>
+            <input
+              type="number"
+              id="prioridade"
+              min="1"
+              max="5"
+              placeholder="Ex: 3"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tempo-estimado">Tempo Estimado (horas):</label>
+            <input
+              type="number"
+              id="tempo-estimado"
+              placeholder="Ex: 4"
+              required
+            />
+          </div>
+          <!-- Botão para enviar o formulário -->
+          <button type="submit" class="btn">Salvar Matéria</button>
+        </form>
+      </section>
 
-    <!-- Formulário para gerar cronograma -->
-    <section>
-      <h2>Gerar Cronograma</h2>
-      <form id="form-cronograma">
-        <label for="nome-estudante-cronograma">Nome do Estudante:</label>
-        <input type="text" id="nome-estudante-cronograma" required />
-        <button type="submit">Gerar</button>
-      </form>
-      <div id="resultado-cronograma"></div>
-    </section>
+      <!-- Seção para gerar o cronograma com base no estudante -->
+      <section class="card">
+        <h2>Gerar Cronograma</h2>
+        <form id="form-cronograma">
+          <div class="form-group">
+            <label for="nome-estudante-cronograma">Nome do Estudante:</label>
+            <input
+              type="text"
+              id="nome-estudante-cronograma"
+              placeholder="Digite o nome do estudante"
+              required
+            />
+          </div>
+          <!-- Botão para gerar o cronograma -->
+          <button type="submit" class="btn">Gerar Cronograma</button>
+        </form>
+        <!-- Área onde o cronograma gerado será exibido -->
+        <div id="resultado-cronograma"></div>
+      </section>
+    </main>
 
+    <!-- Rodapé com informações de direitos autorais -->
+    <footer>
+      <p>&copy; 2024 Gestão de Cronograma. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Script externo para funcionalidades da página -->
     <script src="script.js"></script>
   </body>
 </html>
