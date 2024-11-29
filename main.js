@@ -5,52 +5,9 @@ const EstudanteDAO = require("./src/data/estudanteDAO");
 const MateriaDAO = require("./src/data/materiaDAO");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
-// Conexão com MongoDB
-async function startDB() {
-  try {
-    const dbType = "mongodb";
-    const connectionString = "mongodb://localhost:27017/organizacaoEstudos";
-
-    const database = createDatabaseConnection(dbType, connectionString);
-    await database.connect();
-  } catch (error) {
-    console.error("Erro ao iniciar o banco de dados:", error);
-    process.exit(1); // Finaliza o processo em caso de falha
-  }
-}
-
-// Conexão com MySQL
-/*async function startDB() {
-  try {
-    const dbType = "mysql";
-    const connectionString = {
-      host: "localhost",
-      user: "root",
-      password: "Gvc@_1234",
-      database: "organizacaoEstudos",
-    };
-
-    const database = createDatabaseConnection(dbType, connectionString);
-    await database.connect();
-
-    // Criação de tabelas para simulação
-    const createTableSQL = `
-      CREATE TABLE IF NOT EXISTS estudantes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(255) NOT NULL,
-        tempoDisponivel INT NOT NULL
-      );
-    `;
-    await database.execute(createTableSQL);
-
-    console.log("Banco de dados MySQL e tabelas configurados com sucesso!");
-  } catch (error) {
-    console.error("Erro ao iniciar o banco de dados:", error.message);
-    process.exit(1);
-  }
-}*/
-
-startDB();
+// Conexão com o banco de dados desejado
+const database = createDatabaseConnection("mysql");
+database.connect()
 
 const app = express(); // Inicialização da aplicação Express
 const port = 3000; // Definição da porta para o servidor

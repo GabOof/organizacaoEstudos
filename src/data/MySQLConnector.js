@@ -1,11 +1,25 @@
 const mysql = require("mysql2/promise");
-const DatabaseInterface = require("./databaseService");
+const DatabaseInterface = require("./databaseInterface");
+
+// Criação de tabelas para simulação
+/*const createTableAluno = `
+  CREATE TABLE IF NOT EXISTS estudantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    tempoDisponivel INT NOT NULL
+  );
+`;*/
 
 // Conexão e execução de comandos do MySQL
 class MySQLConnector extends DatabaseInterface {
-    constructor(connectionString) {
+    constructor() {
         super();
-        this.connectionString = connectionString;
+        this.connectionString = {
+            host: "localhost",
+            user: "root",
+            password: "suaSenha",
+            database: "organizacaoEstudos",
+        };
         this.connection = null;
     }
 
@@ -13,6 +27,7 @@ class MySQLConnector extends DatabaseInterface {
     async connect() {
         try {
             this.connection = await mysql.createConnection(this.connectionString);
+            //await this.execute(createTableAluno);
             console.log("Conectado ao MySQL com sucesso!");
         } catch (error) {
             console.error("Erro ao conectar ao MySQL:", error.message);

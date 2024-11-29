@@ -1,5 +1,5 @@
 // Classe abstrata que define a interface para os conectores de banco de dados.
-class DatabaseService {
+class DatabaseInterface {
 
     // Estabelecer a conexão com o banco de dados específico.
     async connect() {
@@ -7,4 +7,4 @@ class DatabaseService {
     }
 }
 
-module.exports = DatabaseService;
+module.exports = DatabaseInterface;

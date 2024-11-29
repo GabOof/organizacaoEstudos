@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const DatabaseInterface = require("./databaseService");
+const DatabaseInterface = require("./databaseInterface");
 
 // Conexão com o MongoDB usando a biblioteca Mongoose.
 class MongoDBConnector extends DatabaseInterface {
-    constructor(connectionString) {
+    constructor() {
         super();
-        this.connectionString = connectionString;
+        this.connectionString = "mongodb://localhost:27017/organizacaoEstudos";
     }
 
     // Conexão com o MongoDB usando a string de conexão fornecida.
