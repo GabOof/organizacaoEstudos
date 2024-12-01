@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/*const mongoose = require("mongoose");
 
 // Define o esquema (estrutura) do modelo "Estudante"
 const estudanteSchema = new mongoose.Schema({
@@ -19,4 +19,39 @@ const estudanteSchema = new mongoose.Schema({
 const Estudante = mongoose.model("Estudante", estudanteSchema);
 
 // Exporta o modelo para que possa ser usado em outras partes do código
+module.exports = Estudante;*/
+
+
+class Estudante {
+  constructor() {
+    this.id = null; // Banco de dados vai gerar o ID
+    this.nome = '';
+    this.tempoDisponivel = 0;
+  }
+
+  setId(id) {
+    this.id = id;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  setNome(nome) {
+    this.nome = nome;
+  }
+
+  getNome() {
+    return this.nome;
+  }
+
+  setTempoDisponivel(tempoDisponivel) {
+    this.tempoDisponivel = tempoDisponivel;
+  }
+
+  getTempoDisponivel() {
+    return this.tempoDisponivel;
+  }
+}
+
 module.exports = Estudante;

@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const { createDatabaseConnection } = require("./src/data/dataAccess");
-const EstudanteDAO = require("./src/data/estudanteDAO");
 const MateriaDAO = require("./src/data/materiaDAO");
 const CronogramaController = require("./src/controllers/cronogramaController");
+const EstudanteRepository = require("./src/repository/EstudanteRepository");
+const EstudanteDAO = require("./src/data/EstudanteDAOMongo");
 
 // Conexão com o banco de dados desejado
-const database = createDatabaseConnection("mysql");
+const database = createDatabaseConnection("mongodb");
 database.connect()
 
 const app = express(); // Inicialização da aplicação Express
@@ -30,7 +31,24 @@ app.post("/estudante", async (req, res) => {
       .json({ error: "Nome e tempoDisponível são necessários" });
   }
 
+
+
   try {
+
+    const dao = new EstudanteDAO();
+    const repository = new EstudanteRepository(dao);
+
+    // Chama o DAO para salvar o estudante no banco de dados
+    const novoEstudante = await repository.salvarEstudante({
+      nome,
+      tempoDisponivel
+    });
+    res.status(201).json(novoEstudante); // Retorna o estudante criado com status 201
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao salvar estudante" }); // Retorna erro 500 se falhar ao salvar
+  }
+
+  /*try {
     // Chama o DAO para salvar o estudante no banco de dados
     const estudante = await EstudanteDAO.salvarEstudante({
       nome,
@@ -38,8 +56,8 @@ app.post("/estudante", async (req, res) => {
     });
     res.status(201).json(estudante); // Retorna o estudante criado com status 201
   } catch (error) {
-    res.status(500).json({ error: "Erro ao salvar estudante" }); // Retorna erro 500 se falhar ao salvar
-  }
+
+  }*/
 });
 
 // Rota para criar uma matéria
