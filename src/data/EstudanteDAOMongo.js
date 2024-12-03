@@ -7,7 +7,7 @@ const estudanteSchema = new mongoose.Schema({
     tempoDisponivel: { type: Number, required: true },
 });
 
-// Modelo do MongoDB
+// Modelo do MongoDB a partir do schema
 const EstudanteModel = mongoose.model('Estudante', estudanteSchema);
 
 class EstudanteDAOMongo extends EstudanteDAOInterface {
@@ -17,7 +17,7 @@ class EstudanteDAOMongo extends EstudanteDAOInterface {
         try {
             const novoEstudante = new EstudanteModel({
                 nome: estudante.getNome(),
-                tempoDisponivel: estudante.getTempoDisponivel(),
+                tempoDisponivel:estudante.getTempoDisponivel(),
             });
             return await novoEstudante.save();
         } catch (error) {
@@ -25,7 +25,6 @@ class EstudanteDAOMongo extends EstudanteDAOInterface {
             throw new Error('Não foi possível salvar o estudante');
         }
     }
-
 
     // Buscar um estudante no banco de dados pelo nome
     async buscarEstudantePorNome(nome) {

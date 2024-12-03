@@ -1,5 +1,4 @@
 const EstudanteDAO = require("../data/EstudanteDAOMongo");
-const EstudanteRepository = require("../repository/EstudanteRepository");
 const MateriaDAO = require("../data/materiaDAO");
 const Cronograma = require("../models/cronograma");
 
@@ -8,10 +7,9 @@ const gerarCronograma = async (estudanteNome) => {
   try {
 
     const dao = new EstudanteDAO();
-    const repository = new EstudanteRepository(dao);
 
     // Busca o estudante no banco de dados usando o nome
-    const estudante = await repository.buscarEstudantePorNome(estudanteNome);
+    const estudante = await dao.buscarEstudantePorNome(estudanteNome);
 
     // Verifica se o estudante foi encontrado, caso contrário, lança um erro
     if (!estudante) {
