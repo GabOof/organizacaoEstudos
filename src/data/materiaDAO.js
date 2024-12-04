@@ -7,7 +7,7 @@ const salvarMateria = async (materia, estudanteId) => {
     const novaMateria = new Materia(materia);
 
     // Salva a nova matéria no banco de dados e retorna o resultado
-    return await novaMateria.save();
+    return await novaMateria.save({ estudanteId });
   } catch (error) {
     // Exibe a mensagem de erro no console e lança o erro
     console.error("Erro ao salvar matéria:", error);
@@ -19,7 +19,7 @@ const salvarMateria = async (materia, estudanteId) => {
 const encontrarMateriasPorEstudante = async (estudanteId) => {
   try {
     // Busca todas as matérias no banco de dados, ordenando pelo campo "prioridade" em ordem crescente
-    return await Materia.find().sort({ prioridade: 1 });
+    return await Materia.find({ estudanteId }).sort({ prioridade: 1 });
   } catch (error) {
     // Se ocorrer um erro ao buscar as matérias, exibe a mensagem de erro no console
     console.error("Erro ao buscar matérias do estudante:", error);
