@@ -1,12 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-const { connectDB } = require("./src/data/dataAccess");
-const EstudanteDAO = require("./src/data/estudanteDAO");
+const { createDatabaseConnection } = require("./src/data/dataAccess");
 const MateriaDAO = require("./src/data/materiaDAO");
+const EstudanteController = require("./src/controllers/estudanteController");
+const EstudanteDAO = require("./src/data/EstudanteDAOMongo");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
-// Conectar ao MongoDB
-connectDB();
+// Conexão com o banco de dados desejado
+const database = createDatabaseConnection("mongodb");
+database.connect()
 
 const app = express(); // Inicialização da aplicação Express
 const port = 3000; // Definição da porta para o servidor
@@ -17,29 +19,11 @@ app.use(cors());
 // Middleware para interpretar JSON no corpo das requisições
 app.use(express.json());
 
+// Instanciando controller do estudante
+const estudanteController = new EstudanteController(new EstudanteDAO());
+
 // Rota para criar um estudante
-app.post("/estudante", async (req, res) => {
-  // Desestruturação dos dados do corpo da requisição
-  const { nome, tempoDisponivel } = req.body;
-
-  // Verificação se os dados necessários estão presentes
-  if (!nome || !tempoDisponivel) {
-    return res
-      .status(400) // Retorna status 400 se faltar nome ou tempoDisponivel
-      .json({ error: "Nome e tempoDisponível são necessários" });
-  }
-
-  try {
-    // Chama o DAO para salvar o estudante no banco de dados
-    const estudante = await EstudanteDAO.salvarEstudante({
-      nome,
-      tempoDisponivel,
-    });
-    res.status(201).json(estudante); // Retorna o estudante criado com status 201
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao salvar estudante" }); // Retorna erro 500 se falhar ao salvar
-  }
-});
+app.post('/estudante', async (req, res) => await estudanteController.salvarEstudante(req, res));
 
 // Rota para criar uma matéria
 app.post("/materia", async (req, res) => {

@@ -1,12 +1,15 @@
-const EstudanteDAO = require("../data/estudanteDAO");
+const EstudanteDAO = require("../data/EstudanteDAOMongo");
 const MateriaDAO = require("../data/materiaDAO");
 const Cronograma = require("../models/cronograma");
 
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
   try {
+
+    const dao = new EstudanteDAO();
+
     // Busca o estudante no banco de dados usando o nome
-    const estudante = await EstudanteDAO.buscarEstudantePorNome(estudanteNome);
+    const estudante = await dao.buscarEstudantePorNome(estudanteNome);
 
     // Verifica se o estudante foi encontrado, caso contrário, lança um erro
     if (!estudante) {

@@ -1,22 +1,35 @@
-const mongoose = require("mongoose");
+class Estudante {
 
-// Define o esquema (estrutura) do modelo "Estudante"
-const estudanteSchema = new mongoose.Schema({
-  // Nome do estudante (campo obrigatório)
-  nome: {
-    type: String, // Tipo de dado String
-    required: true, // Campo obrigatório
-  },
+  constructor(nome, tempoDisponivel) {
+    this.id = null; // Banco de dados vai gerar o ID
+    this.nome = nome;
+    this.tempoDisponivel = tempoDisponivel;
+  }
 
-  // Tempo disponível para o estudante (campo obrigatório)
-  tempoDisponivel: {
-    type: Number, // Tipo de dado Number
-    required: true, // Campo obrigatório
-  },
-});
+  setId(id) {
+    this.id = id;
+  }
 
-// Cria o modelo "Estudante" a partir do esquema definido
-const Estudante = mongoose.model("Estudante", estudanteSchema);
+  getId() {
+    return this.id;
+  }
 
-// Exporta o modelo para que possa ser usado em outras partes do código
+  setNome(nome) {
+    this.nome = nome;
+  }
+
+  getNome() {
+    return this.nome;
+  }
+
+  setTempoDisponivel(tempoDisponivel) {
+    this.tempoDisponivel = tempoDisponivel;
+  }
+
+  getTempoDisponivel() {
+    return this.tempoDisponivel;
+  }
+
+}
+
 module.exports = Estudante;

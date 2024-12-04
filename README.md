@@ -56,6 +56,7 @@ src/
 
    ```bash
    npm install
+   npm install cors
    ```
 
 3. **Configure o MongoDB:**
