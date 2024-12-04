@@ -5,7 +5,6 @@ const Cronograma = require("../models/cronograma");
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
   try {
-
     const dao = new EstudanteDAO();
 
     // Busca o estudante no banco de dados usando o nome
@@ -16,12 +15,12 @@ const gerarCronograma = async (estudanteNome) => {
       throw new Error("Estudante não encontrado");
     }
 
-    // Busca as matérias cadastradas e ordena por prioridade
-    const materias = await MateriaDAO.encontrarMateriasPorPrioridade();
+    // Busca as matérias cadastradas para esse estudante e ordena por prioridade
+    const materias = await MateriaDAO.encontrarMateriasPorEstudante(estudante._id);
 
-    // Verifica se há matérias cadastradas, caso contrário, lança um erro
+    // Verifica se há matérias cadastradas para o estudante, caso contrário, lança um erro
     if (materias.length === 0) {
-      throw new Error("Nenhuma matéria cadastrada");
+      throw new Error("Nenhuma matéria cadastrada para esse estudante");
     }
 
     // Inicializa o tempo disponível do estudante para alocar nas matérias

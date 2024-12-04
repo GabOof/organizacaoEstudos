@@ -27,15 +27,20 @@ app.post('/estudante', async (req, res) => await estudanteController.salvarEstud
 
 // Rota para criar uma matéria
 app.post("/materia", async (req, res) => {
-  // Desestruturação dos dados do corpo da requisição
-  const { nome, prioridade, tempoEstimado } = req.body;
-
   try {
+    // Desestruturação dos dados do corpo da requisição
+    const { nome, prioridade, tempoEstimado, estudanteId } = req.body;
+
+    if (!estudanteId) {
+      return res.status(400).json({ message: "EstudanteId é obrigatório" });
+    }
+
     // Chama o DAO para salvar a matéria no banco de dados
     const materia = await MateriaDAO.salvarMateria({
       nome,
       prioridade,
       tempoEstimado,
+      estudanteId,
     });
     res.status(201).json(materia); // Retorna a matéria criada com status 201
   } catch (error) {

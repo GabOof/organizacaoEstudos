@@ -1,8 +1,11 @@
 const API_URL = "http://localhost:3000"; // URL base da API
 
+// Variável global para armazenar o ID do estudante
+let estudanteId = null;
+
 // Função para enviar dados do formulário de estudante
 document
-  .getElementById("form-estudante") // Seleciona o formulário de estudante
+  .getElementById("form-estudante")
   .addEventListener("submit", async (e) => {
     e.preventDefault(); // Evita o recarregamento da página ao submeter o formulário
 
@@ -14,12 +17,18 @@ document
       // Faz uma requisição POST para criar um estudante
       const response = await fetch(`${API_URL}/estudante`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }, // Define o cabeçalho como JSON
-        body: JSON.stringify({ nome, tempoDisponivel }), // Corpo da requisição com os dados do estudante
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, tempoDisponivel }),
       });
       const data = await response.json(); // Extrai a resposta da API como JSON
-      alert("Estudante salvo com sucesso!"); // Informa o usuário sobre o sucesso
-      console.log(data); // Loga a resposta da API para fins de depuração
+
+      if (response.ok) {
+        estudanteId = data._id; // Atualiza o estudanteId global com o valor correto
+        alert("Estudante salvo com sucesso!"); // Informa o usuário sobre o sucesso
+        console.log("Estudante criado:", data);
+      } else {
+        alert(data.message || "Erro ao salvar estudante");
+      }
     } catch (error) {
       alert("Erro ao salvar estudante"); // Mostra um alerta caso ocorra erro
     }
@@ -36,16 +45,31 @@ document
     const prioridade = document.getElementById("prioridade").value;
     const tempoEstimado = document.getElementById("tempo-estimado").value;
 
+    if (!estudanteId) {
+      alert("Por favor, cadastre um estudante primeiro!");
+      return;
+    }
+
     try {
-      // Faz uma requisição POST para criar uma matéria
+      // Faz uma requisição POST para criar uma matéria associada ao estudante
       const response = await fetch(`${API_URL}/materia`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }, // Define o cabeçalho como JSON
-        body: JSON.stringify({ nome, prioridade, tempoEstimado }), // Corpo da requisição com os dados da matéria
+        body: JSON.stringify({
+          nome,
+          prioridade,
+          tempoEstimado,
+          estudanteId, // Adiciona o ID do estudante
+        }), // Corpo da requisição com os dados da matéria
       });
       const data = await response.json(); // Extrai a resposta da API como JSON
-      alert("Matéria salva com sucesso!"); // Informa o usuário sobre o sucesso
-      console.log(data); // Loga a resposta da API para fins de depuração
+
+      if (response.ok) {
+        alert("Matéria salva com sucesso!"); // Informa o usuário sobre o sucesso
+        console.log("Matéria criada:", data); // Loga a resposta da API para depuração
+      } else {
+        alert(data.message || "Erro ao salvar matéria");
+      }
     } catch (error) {
       alert("Erro ao salvar matéria"); // Mostra um alerta caso ocorra erro
     }

@@ -19,6 +19,13 @@ const materiaSchema = new mongoose.Schema({
     type: Number, // Tipo de dado Number
     required: true, // Campo obrigatório
   },
+
+  // Referência ao ID do estudante
+  estudanteId: {
+    type: mongoose.Schema.Types.ObjectId, // Tipo ObjectId do MongoDB
+    ref: "Estudante", // Refere-se ao modelo Estudante
+    required: true, // Campo obrigatório
+  },
 });
 
 // Cria o modelo "Materia" a partir do esquema definido
