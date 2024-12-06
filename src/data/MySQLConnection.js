@@ -1,6 +1,6 @@
 const mysql = require("mysql2/promise");
 const DatabaseConnection = require('./DatabaseConnection');
-require('dotenv').config();
+require('dotenv').config({path:'MySQL.env'});
 
 // TODO tirar a criação da tabela da classe de conexão
 /*// Criação de tabelas para simulação
