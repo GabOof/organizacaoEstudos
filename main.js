@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const { createDatabaseConnection } = require("./src/data/dataAccess");
+const MongoDB = require("./src/data/MongoDBConnection");
 const MateriaDAO = require("./src/data/materiaDAO");
 const EstudanteController = require("./src/controllers/estudanteController");
 const EstudanteDAO = require("./src/data/EstudanteDAOMongo");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
-const database = createDatabaseConnection("mongodb");
+const database = new MongoDB()
 database.connect()
 
 const app = express(); // Inicialização da aplicação Express
