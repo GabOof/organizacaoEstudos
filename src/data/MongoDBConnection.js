@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const DatabaseConnection = require('./DatabaseConnection');
-require('dotenv').config();
+require('dotenv').config({path:'Mongo.env'});
 
 class MongoDBConnection extends DatabaseConnection {
     constructor() {

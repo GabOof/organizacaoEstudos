@@ -1,10 +1,10 @@
 const mysql = require("mysql2/promise");
 const DatabaseConnection = require('./DatabaseConnection');
-require('dotenv').config();
+require('dotenv').config({path:'MySQL.env'});
 
 // TODO tirar a criação da tabela da classe de conexão
-/*// Criação de tabelas para simulação
-const createTableAluno = `
+// Criação de tabelas para simulação
+/*const createTableAluno = `
   CREATE TABLE IF NOT EXISTS estudantes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ class MySQLConnector extends DatabaseConnection {
     constructor() {
         super();
         this.connectionString = {
-            host: process.env.DB_URL,
+            host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
