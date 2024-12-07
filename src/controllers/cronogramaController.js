@@ -1,6 +1,9 @@
 const EstudanteDAO = require("../data/EstudanteDAOMongo");
 const MateriaDAO = require("../data/materiaDAO");
+const Materia = require("../models/materia");
 const Cronograma = require("../models/cronograma");
+
+const mongoose = require("mongoose");
 
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
@@ -16,7 +19,9 @@ const gerarCronograma = async (estudanteNome) => {
     }
 
     // Busca as matérias cadastradas para esse estudante e ordena por prioridade
-    const materias = await MateriaDAO.encontrarMateriasPorEstudante(estudante._id);
+    const materias = await MateriaDAO.encontrarMateriasPorEstudante(
+      estudante._id
+    );
 
     // Verifica se há matérias cadastradas para o estudante, caso contrário, lança um erro
     if (materias.length === 0) {
@@ -34,6 +39,7 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome, // Nome da matéria
           tempoAlocado: materia.tempoEstimado, // Tempo alocado à matéria
+          _id: materia._id, // ID da matéria
         });
         // Subtrai o tempo alocado da quantidade de tempo disponível
         tempoDisponivel -= materia.tempoEstimado;
@@ -42,6 +48,7 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome,
           tempoAlocado: tempoDisponivel, // Tempo alocado é o que resta disponível
+          _id: materia._id, // ID da matéria
         });
         break; // Não há mais tempo disponível para outras matérias
       } else {
@@ -64,6 +71,32 @@ const gerarCronograma = async (estudanteNome) => {
   }
 };
 
+// Função para marcar uma matéria como estudada
+const marcarMateriaEstudada = async (materiaId) => {
+  try {
+    // Verifica se o materiaId é um ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(materiaId)) {
+      throw new Error("ID de matéria inválido");
+    }
+
+    // Busca a matéria para validar se existe no banco
+    const materia = await Materia.findById(materiaId);
+    if (!materia) {
+      throw new Error("Matéria não encontrada");
+    }
+
+    // Atualize apenas se a matéria for válida
+    materia.estudada = true;
+    await materia.save();
+
+    return materia;
+  } catch (error) {
+    console.error("Erro ao marcar matéria como estudada:", error);
+    throw error;
+  }
+};
+
 module.exports = {
-  gerarCronograma, // Exporta a função para ser utilizada em outras partes do código
+  gerarCronograma,
+  marcarMateriaEstudada,
 };
