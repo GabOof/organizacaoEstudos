@@ -14,6 +14,7 @@ const cronogramaSchema = new mongoose.Schema({
     {
       nome: String, // Nome da matéria (tipo String)
       tempoAlocado: Number, // Tempo alocado para a matéria (tipo Number)
+      estudada: Boolean, // Controle para estudante saber se a matéria já foi estudada (tipo Boolean)
     },
   ],
 

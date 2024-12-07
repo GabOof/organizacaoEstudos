@@ -28,6 +28,7 @@ const gerarCronograma = async (estudanteNome) => {
       throw new Error("Estudante não encontrado");
     }
 
+    // TODO: verificar se houve atualizações nas matérias desse aluno
     // Verifica se o estudante já possui um cronograma
     const cronogramaExistente = await buscarCronogramaPorEstudante(
       estudante._id
@@ -57,6 +58,7 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome, // Nome da matéria
           tempoAlocado: materia.tempoEstimado, // Tempo alocado à matéria
+          estudada: materia.estudada, // Estudante já estudou a matéria ou não
           _id: materia._id, // ID da matéria
         });
         // Subtrai o tempo alocado da quantidade de tempo disponível
@@ -66,6 +68,7 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome,
           tempoAlocado: tempoDisponivel, // Tempo alocado é o que resta disponível
+          estudada: materia.estudada, // Estudante já estudou a matéria ou não
           _id: materia._id, // ID da matéria
         });
         break; // Não há mais tempo disponível para outras matérias
