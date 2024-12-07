@@ -7,10 +7,11 @@ const EstudanteDAO = require("./src/data/EstudanteDAOMongo");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
-const database = new MongoDB()
-database.connect()
+const database = new MongoDB();
+database.connect();
 
 const app = express(); // Inicialização da aplicação Express
+const router = express.Router(); // Inicialização do roteador Express
 const port = 3000; // Definição da porta para o servidor
 
 // Habilita CORS para todas as origens
@@ -23,7 +24,10 @@ app.use(express.json());
 const estudanteController = new EstudanteController(new EstudanteDAO());
 
 // Rota para criar um estudante
-app.post('/estudante', async (req, res) => await estudanteController.salvarEstudante(req, res));
+app.post(
+  "/estudante",
+  async (req, res) => await estudanteController.salvarEstudante(req, res)
+);
 
 // Rota para criar uma matéria
 app.post("/materia", async (req, res) => {
@@ -69,6 +73,24 @@ app.get("/cronograma/:estudanteNome", async (req, res) => {
     res.status(500).json({ error: "Erro ao gerar cronograma" }); // Retorna erro 500 se falhar ao gerar o cronograma
   }
 });
+
+// Rota para marcar uma matéria como estudada
+router.post("/materia/estudar/:materiaId", async (req, res) => {
+  try {
+    const materiaId = req.params.materiaId;
+    const materiaAtualizada = await CronogramaController.marcarMateriaEstudada(
+      materiaId
+    );
+    res.json(materiaAtualizada);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Erro ao atualizar a matéria", error: error.message });
+  }
+});
+
+// Middleware para tratamento de erros
+app.use(router);
 
 // Iniciar o servidor
 app.listen(port, () => {

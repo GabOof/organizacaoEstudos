@@ -26,6 +26,12 @@ const materiaSchema = new mongoose.Schema({
     ref: "Estudante", // Refere-se ao modelo Estudante
     required: true, // Campo obrigatório
   },
+
+  // Indica se a matéria foi estudada
+  estudada: {
+    type: Boolean, // Tipo de dado Boolean
+    default: false, // Por padrão, a matéria não é estudada
+  },
 });
 
 // Cria o modelo "Materia" a partir do esquema definido

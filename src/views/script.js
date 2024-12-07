@@ -25,7 +25,6 @@ document
       if (response.ok) {
         estudanteId = data._id; // Atualiza o estudanteId global com o valor correto
         alert("Estudante salvo com sucesso!"); // Informa o usuário sobre o sucesso
-        console.log("Estudante criado:", data);
       } else {
         alert(data.message || "Erro ao salvar estudante");
       }
@@ -66,7 +65,6 @@ document
 
       if (response.ok) {
         alert("Matéria salva com sucesso!"); // Informa o usuário sobre o sucesso
-        console.log("Matéria criada:", data); // Loga a resposta da API para depuração
       } else {
         alert(data.message || "Erro ao salvar matéria");
       }
@@ -107,28 +105,64 @@ document
             <tr>
               <th>Matéria</th>
               <th>Tempo Alocado (horas)</th>
+              <th>Estudada</th>
             </tr>
           </thead>
           <tbody>
             ${materias
               .map(
                 (materia) => `
-              <tr>
-                <td>${materia.nome}</td>
-                <td>${materia.tempoAlocado}</td>
-              </tr>`
+                  <tr>
+                    <td>${materia.nome}</td>
+                    <td>${materia.tempoAlocado}</td>
+                    <td>
+                      <button class="btn-estudar" data-materia-id="${
+                        materia._id
+                      }">
+                        ${
+                          materia.estudada ? "Estudada" : "Marcar como Estudada"
+                        }
+                      </button>
+                    </td>
+                  </tr>`
               )
               .join("")} <!-- Gera dinamicamente as linhas da tabela -->
           </tbody>
-        </table>
-      `;
+        </table>`;
+
         // Insere a tabela gerada no elemento de resultados
         document.getElementById("resultado-cronograma").innerHTML = tabela;
+        // Adicionar evento de clique nos botões
+        document.querySelectorAll(".btn-estudar").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const materiaId = button.getAttribute("data-materia-id");
+            try {
+              const response = await fetch(
+                `${API_URL}/materia/estudar/${materiaId}`,
+                {
+                  method: "POST",
+                }
+              );
+              const materiaAtualizada = await response.json();
+              if (response.ok) {
+                alert("Matéria marcada como estudada!");
+                button.innerText = "Estudada"; // Atualiza o botão
+              } else {
+                alert(
+                  materiaAtualizada.message ||
+                    "Erro ao marcar matéria como estudada"
+                );
+              }
+            } catch (error) {
+              alert("Erro ao conectar ao servidor");
+            }
+          });
+        });
       } else {
         // Exibe uma mensagem de erro caso o cronograma não seja gerado
-        document.getElementById("resultado-cronograma").innerHTML = `
-        <p>${data.message || "Erro ao gerar cronograma"}</p>
-      `;
+        document.getElementById("resultado-cronograma").innerHTML = `<p>${
+          data.message || "Erro ao gerar cronograma"
+        }</p>`;
       }
     } catch (error) {
       alert("Erro ao conectar ao servidor"); // Mostra um alerta caso ocorra erro na conexão
