@@ -5,6 +5,16 @@ const Cronograma = require("../models/cronograma");
 
 const mongoose = require("mongoose");
 
+// Função para buscar o cronograma existente de um estudante
+const buscarCronogramaPorEstudante = async (estudanteId) => {
+  try {
+    return await Cronograma.findOne({ estudante: estudanteId });
+  } catch (error) {
+    console.error("Erro ao buscar cronograma:", error);
+    throw error;
+  }
+};
+
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
   try {
@@ -16,6 +26,14 @@ const gerarCronograma = async (estudanteNome) => {
     // Verifica se o estudante foi encontrado, caso contrário, lança um erro
     if (!estudante) {
       throw new Error("Estudante não encontrado");
+    }
+
+    // Verifica se o estudante já possui um cronograma
+    const cronogramaExistente = await buscarCronogramaPorEstudante(
+      estudante._id
+    );
+    if (cronogramaExistente) {
+      return cronogramaExistente; // Retorna o cronograma existente
     }
 
     // Busca as matérias cadastradas para esse estudante e ordena por prioridade
@@ -99,4 +117,5 @@ const marcarMateriaEstudada = async (materiaId) => {
 module.exports = {
   gerarCronograma,
   marcarMateriaEstudada,
+  buscarCronogramaPorEstudante,
 };
