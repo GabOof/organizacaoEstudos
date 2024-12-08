@@ -3,7 +3,7 @@ const cors = require("cors");
 const MongoDB = require("./src/data/MongoDBConnection");
 const MateriaDAO = require("./src/data/materiaDAO");
 const EstudanteController = require("./src/controllers/estudanteController");
-const EstudanteDAO = require("./src/data/EstudanteDAOMongo");
+const EstudanteDAOMongo = require("./src/data/EstudanteDAOMongo");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
@@ -21,7 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 // Instanciando controller do estudante
-const estudanteController = new EstudanteController(new EstudanteDAO());
+const estudanteController = new EstudanteController(new EstudanteDAOMongo());
 
 // Rota para criar um estudante
 app.post(
@@ -49,6 +49,29 @@ app.post("/materia", async (req, res) => {
     res.status(201).json(materia); // Retorna a matéria criada com status 201
   } catch (error) {
     res.status(500).json({ error: "Erro ao cadastrar matéria" }); // Retorna erro 500 se falhar ao salvar
+  }
+});
+
+// Rota para buscar estudante pelo nome
+app.get("/estudante/nome/:nome", async (req, res) => {
+  const { nome } = req.params;
+
+  try {
+    // Instancia a classe EstudanteDAOMongo
+    const estudanteDAO = new EstudanteDAOMongo();
+    // Chama o método de instância buscarEstudantePorNome
+    const estudante = await estudanteDAO.buscarEstudantePorNome(nome);
+
+    // Verifica se o estudante foi encontrado
+    if (!estudante) {
+      return res.status(404).json({ message: "Estudante não encontrado" });
+    }
+    res.status(200).json(estudante); // Retorna o estudante encontrado
+  } catch (error) {
+    console.error("Erro ao buscar estudante:", error); // Registra o erro no console do servidor
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar estudante", error: error.message }); // Retorna erro 500 se falhar ao buscar
   }
 });
 
