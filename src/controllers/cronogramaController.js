@@ -1,6 +1,38 @@
 const EstudanteDAO = require("../data/EstudanteDAOMongo");
 const MateriaDAO = require("../data/materiaDAO");
+const Materia = require("../models/materia");
 const Cronograma = require("../models/cronograma");
+
+const mongoose = require("mongoose");
+
+// Função para buscar o cronograma existente de um estudante
+const buscarCronogramaPorEstudante = async (estudanteId) => {
+  try {
+    // Busca o cronograma do estudante
+    const cronograma = await Cronograma.findOne({
+      estudante: estudanteId,
+    }).populate("materias._id");
+
+    if (!cronograma) return null; // Retorna null se não houver cronograma
+
+    // Atualiza o status de 'estudada' para as matérias no cronograma
+    for (const item of cronograma.materias) {
+      const materiaAtualizada = await Materia.findById(item._id); // Busca matéria mais recente
+      if (materiaAtualizada && item.estudada !== materiaAtualizada.estudada) {
+        // Sincroniza status de 'estudada'
+        item.estudada = materiaAtualizada.estudada;
+      }
+    }
+
+    // Salva as atualizações no cronograma, caso tenha mudado
+    await cronograma.save();
+
+    return cronograma; // Retorna o cronograma atualizado
+  } catch (error) {
+    console.error("Erro ao buscar cronograma:", error);
+    throw error;
+  }
+};
 
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
@@ -15,8 +47,19 @@ const gerarCronograma = async (estudanteNome) => {
       throw new Error("Estudante não encontrado");
     }
 
+    // TODO: verificar se houve atualizações nas matérias desse aluno
+    // Verifica se o estudante já possui um cronograma
+    const cronogramaExistente = await buscarCronogramaPorEstudante(
+      estudante._id
+    );
+    if (cronogramaExistente) {
+      return cronogramaExistente; // Retorna o cronograma existente
+    }
+
     // Busca as matérias cadastradas para esse estudante e ordena por prioridade
-    const materias = await MateriaDAO.encontrarMateriasPorEstudante(estudante._id);
+    const materias = await MateriaDAO.encontrarMateriasPorEstudante(
+      estudante._id
+    );
 
     // Verifica se há matérias cadastradas para o estudante, caso contrário, lança um erro
     if (materias.length === 0) {
@@ -34,6 +77,8 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome, // Nome da matéria
           tempoAlocado: materia.tempoEstimado, // Tempo alocado à matéria
+          estudada: materia.estudada, // Estudante já estudou a matéria ou não
+          _id: materia._id, // ID da matéria
         });
         // Subtrai o tempo alocado da quantidade de tempo disponível
         tempoDisponivel -= materia.tempoEstimado;
@@ -42,6 +87,8 @@ const gerarCronograma = async (estudanteNome) => {
         cronograma.push({
           nome: materia.nome,
           tempoAlocado: tempoDisponivel, // Tempo alocado é o que resta disponível
+          estudada: materia.estudada, // Estudante já estudou a matéria ou não
+          _id: materia._id, // ID da matéria
         });
         break; // Não há mais tempo disponível para outras matérias
       } else {
@@ -64,6 +111,39 @@ const gerarCronograma = async (estudanteNome) => {
   }
 };
 
+// Função para marcar uma matéria como estudada
+const marcarMateriaEstudada = async (materiaId) => {
+  try {
+    // Verifica se o materiaId é um ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(materiaId)) {
+      throw new Error("ID de matéria inválido");
+    }
+
+    // Busca a matéria para validar se existe no banco
+    const materia = await Materia.findById(materiaId);
+    if (!materia) {
+      throw new Error("Matéria não encontrada");
+    }
+
+    // Atualize apenas se a matéria for válida
+    materia.estudada = true;
+    await materia.save();
+
+    // Atualiza o cronograma associado ao estudante da matéria
+    const estudanteId = materia.estudante; // ID do estudante associado à matéria
+    const cronogramaAtualizado = await buscarCronogramaPorEstudante(
+      estudanteId
+    );
+
+    return cronogramaAtualizado; // Retorna o cronograma atualizado
+  } catch (error) {
+    console.error("Erro ao marcar matéria como estudada:", error);
+    throw error;
+  }
+};
+
 module.exports = {
-  gerarCronograma, // Exporta a função para ser utilizada em outras partes do código
+  gerarCronograma,
+  marcarMateriaEstudada,
+  buscarCronogramaPorEstudante,
 };
