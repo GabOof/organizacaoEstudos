@@ -1,9 +1,9 @@
 class Estudante {
-
   constructor(nome, tempoDisponivel) {
     this.id = null; // Banco de dados vai gerar o ID
     this.nome = nome;
     this.tempoDisponivel = tempoDisponivel;
+    this.dataCriacao = new Date(); // Adiciona a data de criação
   }
 
   setId(id) {
@@ -30,6 +30,13 @@ class Estudante {
     return this.tempoDisponivel;
   }
 
+  getDataCriacao() {
+    return this.dataCriacao;
+  }
+
+  setDataCriacao(dataCriacao) {
+    this.dataCriacao = dataCriacao;
+  }
 }
 
 module.exports = Estudante;
