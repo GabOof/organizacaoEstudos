@@ -52,11 +52,47 @@ const gerarCronograma = async (estudanteNome) => {
     const cronogramaExistente = await buscarCronogramaPorEstudante(
       estudante._id
     );
+
+    // Caso exista um cronograma, atualiza as matérias com os dados mais recentes
     if (cronogramaExistente) {
-      return cronogramaExistente; // Retorna o cronograma existente
+      // Atualiza as matérias do cronograma com as matérias mais recentes
+      const materiasAtualizadas =
+        await MateriaDAO.encontrarMateriasPorEstudante(estudante._id);
+
+      const cronogramaAtualizado = cronogramaExistente;
+      cronogramaAtualizado.materias = [];
+
+      let tempoDisponivel = estudante.tempoDisponivel;
+
+      // Loop para alocar o tempo disponível nas matérias, respeitando a prioridade
+      for (const materia of materiasAtualizadas) {
+        if (tempoDisponivel >= materia.tempoEstimado) {
+          cronogramaAtualizado.materias.push({
+            nome: materia.nome,
+            tempoAlocado: materia.tempoEstimado,
+            estudada: materia.estudada,
+            _id: materia._id,
+          });
+          tempoDisponivel -= materia.tempoEstimado;
+        } else if (tempoDisponivel > 0) {
+          cronogramaAtualizado.materias.push({
+            nome: materia.nome,
+            tempoAlocado: tempoDisponivel,
+            estudada: materia.estudada,
+            _id: materia._id,
+          });
+          break;
+        } else {
+          break;
+        }
+      }
+
+      // Atualiza o cronograma no banco de dados com as novas matérias e tempo alocado
+      await cronogramaAtualizado.save();
+      return cronogramaAtualizado; // Retorna o cronograma atualizado
     }
 
-    // Busca as matérias cadastradas para esse estudante e ordena por prioridade
+    // Caso não haja cronograma existente, cria um novo
     const materias = await MateriaDAO.encontrarMateriasPorEstudante(
       estudante._id
     );
@@ -96,14 +132,13 @@ const gerarCronograma = async (estudanteNome) => {
       }
     }
 
-    // Salva o cronograma gerado no banco de dados, associando ao estudante
+    // Cria o novo cronograma e salva no banco de dados
     const cronogramaSalvo = await Cronograma.create({
       estudante: estudante._id, // Referência ao estudante no cronograma
       materias: cronograma, // Lista das matérias alocadas no cronograma
     });
 
-    // Retorna o cronograma salvo
-    return cronogramaSalvo;
+    return cronogramaSalvo; // Retorna o cronograma salvo
   } catch (error) {
     // Em caso de erro, exibe a mensagem no console e lança o erro novamente
     console.error("Erro ao gerar cronograma:", error);
@@ -125,7 +160,7 @@ const marcarMateriaEstudada = async (materiaId) => {
       throw new Error("Matéria não encontrada");
     }
 
-    // Atualize apenas se a matéria for válida
+    // Marca a matéria como estudada
     materia.estudada = true;
     await materia.save();
 
