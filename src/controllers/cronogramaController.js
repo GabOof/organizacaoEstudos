@@ -8,7 +8,26 @@ const mongoose = require("mongoose");
 // Função para buscar o cronograma existente de um estudante
 const buscarCronogramaPorEstudante = async (estudanteId) => {
   try {
-    return await Cronograma.findOne({ estudante: estudanteId });
+    // Busca o cronograma do estudante
+    const cronograma = await Cronograma.findOne({
+      estudante: estudanteId,
+    }).populate("materias._id");
+
+    if (!cronograma) return null; // Retorna null se não houver cronograma
+
+    // Atualiza o status de 'estudada' para as matérias no cronograma
+    for (const item of cronograma.materias) {
+      const materiaAtualizada = await Materia.findById(item._id); // Busca matéria mais recente
+      if (materiaAtualizada && item.estudada !== materiaAtualizada.estudada) {
+        // Sincroniza status de 'estudada'
+        item.estudada = materiaAtualizada.estudada;
+      }
+    }
+
+    // Salva as atualizações no cronograma, caso tenha mudado
+    await cronograma.save();
+
+    return cronograma; // Retorna o cronograma atualizado
   } catch (error) {
     console.error("Erro ao buscar cronograma:", error);
     throw error;
@@ -110,7 +129,13 @@ const marcarMateriaEstudada = async (materiaId) => {
     materia.estudada = true;
     await materia.save();
 
-    return materia;
+    // Atualiza o cronograma associado ao estudante da matéria
+    const estudanteId = materia.estudante; // ID do estudante associado à matéria
+    const cronogramaAtualizado = await buscarCronogramaPorEstudante(
+      estudanteId
+    );
+
+    return cronogramaAtualizado; // Retorna o cronograma atualizado
   } catch (error) {
     console.error("Erro ao marcar matéria como estudada:", error);
     throw error;
