@@ -111,53 +111,54 @@ document
 
         // Monta o HTML da tabela do cronograma
         const tabela = `
-        <h3>Cronograma de Estudos</h3>
-        <p><strong>Estudante:</strong> ${estudanteNome}</p>
-        <p><strong>Data de Criação:</strong> ${new Date(
-          data.dataCriacao
-        ).toLocaleString()}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Matéria</th>
-              <th>Tempo Alocado (horas)</th>
-              <th>Estudada</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${materias
-              .map(
-                (materia) => `
-                  <tr>
-                    <td>${materia.nome}</td>
-                    <td>${materia.tempoAlocado}</td>
-                    <td>
-                      <button class="btn-estudar" data-materia-id="${
-                        materia._id
-                      }">
-                        ${
-                          materia.estudada ? "Estudada" : "Marcar como Estudada"
-                        }
-                      </button>
-                    </td>
-                  </tr>`
-              )
+          <h3>Cronograma de Estudos</h3>
+          <p><strong>Estudante:</strong> ${estudanteNome}</p>
+          <p><strong>Data de Criação:</strong> ${new Date(
+            data.dataCriacao
+          ).toLocaleString()}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Matéria</th>
+                <th>Tempo Alocado (horas)</th>
+                <th>Estudada</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${materias
+                .map(
+                  (materia) => `
+                    <tr>
+                      <td>${materia.nome}</td>
+                      <td>${materia.tempoAlocado}</td>
+                      <td>
+                        <button class="btn-estudar" data-materia-id="${
+                          materia._id
+                        }">
+                          ${
+                            materia.estudada
+                              ? "Estudada"
+                              : "Marcar como Estudada"
+                          }
+                        </button>
+                      </td>
+                    </tr>`
+                )
               .join("")} <!-- Gera dinamicamente as linhas da tabela -->
-          </tbody>
-        </table>`;
+            </tbody>
+          </table>`;
 
         // Insere a tabela gerada no elemento de resultados
         document.getElementById("resultado-cronograma").innerHTML = tabela;
-        // Adicionar evento de clique nos botões
+
+        // Adiciona eventos de "Marcar como Estudada" nos novos botões
         document.querySelectorAll(".btn-estudar").forEach((button) => {
           button.addEventListener("click", async () => {
             const materiaId = button.getAttribute("data-materia-id");
             try {
               const response = await fetch(
                 `${API_URL}/materia/estudar/${materiaId}`,
-                {
-                  method: "POST",
-                }
+                { method: "POST" }
               );
               const materiaAtualizada = await response.json();
               if (response.ok) {
