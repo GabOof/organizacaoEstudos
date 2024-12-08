@@ -43,13 +43,29 @@ document
     const nome = document.getElementById("nome-materia").value;
     const prioridade = document.getElementById("prioridade").value;
     const tempoEstimado = document.getElementById("tempo-estimado").value;
+    const nomeEstudante = document.getElementById(
+      "nome-estudante-materia"
+    ).value;
 
-    if (!estudanteId) {
-      alert("Por favor, cadastre um estudante primeiro!");
+    if (!nomeEstudante) {
+      alert("Por favor, forneça o nome do estudante!");
       return;
     }
 
     try {
+      // Buscar o ID do estudante
+      const responseEstudante = await fetch(
+        `${API_URL}/estudante/nome/${nomeEstudante}`
+      );
+      const dataEstudante = await responseEstudante.json();
+
+      if (!responseEstudante.ok) {
+        alert(dataEstudante.message || "Estudante não encontrado");
+        return;
+      }
+
+      const estudanteId = dataEstudante._id;
+
       // Faz uma requisição POST para criar uma matéria associada ao estudante
       const response = await fetch(`${API_URL}/materia`, {
         method: "POST",
@@ -168,3 +184,17 @@ document
       alert("Erro ao conectar ao servidor"); // Mostra um alerta caso ocorra erro na conexão
     }
   });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Adiciona um ouvinte de evento para todos os ícones de tooltip
+  document.querySelectorAll(".tooltip-icon").forEach(function (icon) {
+    icon.addEventListener("click", function (e) {
+      // Exibe o texto da tooltip em um alert
+      const tooltipText =
+        "A prioridade 1 é a mais alta e a prioridade 5 é a mais baixa.";
+      if (tooltipText) {
+        alert(tooltipText); // Exibe o texto da tooltip em um alert
+      }
+    });
+  });
+});

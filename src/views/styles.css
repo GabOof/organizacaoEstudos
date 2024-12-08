@@ -124,3 +124,32 @@ footer {
   font-size: 0.9em; /* Texto menor */
   color: #666; /* Cor mais clara */
 }
+
+/* Tooltip Icon */
+.tooltip-icon {
+  font-size: 14px; /* Tamanho menor para o ícone */
+  color: #555; /* Cor preta para o ícone */
+  cursor: pointer; /* Cursor de mão ao passar o mouse */
+  margin-left: 8px; /* Espaço à esquerda do ícone */
+}
+
+/* Estilo do campo de input e label */
+.form-group {
+  position: relative; /* Necessário para o ícone ser posicionado de forma absoluta dentro do form-group */
+  margin-bottom: 15px; /* Espaço entre os campos */
+}
+
+/* Alinha o label e o ícone */
+label {
+  display: flex;
+  justify-content: space-between; /* Distribui espaço entre o texto do label e o ícone */
+  align-items: center; /* Alinha verticalmente o texto e o ícone */
+  font-size: 16px;
+  margin-bottom: 5px; /* Distância do label para o input */
+  position: relative; /* Permite o ícone ser posicionado à direita do label */
+}
+
+/* Estilo do input */
+input {
+  padding-right: 30px; /* Espaço extra à direita para o ícone não se sobrepor */
+}
