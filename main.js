@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const MongoDB = require("./src/data/MongoDBConnection");
+//const MySQLDB = require("./src/data/MySQLConnection");
 const MateriaDAO = require("./src/data/materiaDAO");
 const EstudanteController = require("./src/controllers/estudanteController");
 const EstudanteDAOMongo = require("./src/data/EstudanteDAOMongo");
+//const EstudanteDAOMySQL = require("./src/data/EstudanteDAOMySQL");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
@@ -21,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Instanciando controller do estudante
+//const estudanteController = new EstudanteController(new EstudanteDAOMySQL(database.getPool()));
 const estudanteController = new EstudanteController(new EstudanteDAOMongo());
 
 // Rota para criar um estudante
