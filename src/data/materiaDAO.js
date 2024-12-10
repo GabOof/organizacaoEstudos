@@ -29,6 +29,30 @@ const encontrarMateriasPorEstudante = async (estudanteId) => {
   }
 };
 
+// Função para encontrar uma matéria dado o ID
+async function encontrarMateriaPorId(id) {
+  try {
+
+    // Verifica se o ID fornecido é válido
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error("ID inválido");
+    }
+
+    // Busca a matéria pelo ID
+    const materia = await Materia.findById(id);
+
+    if (!materia) {
+      console.log("Matéria não encontrada");
+      return null;
+    }
+
+    return materia;
+  } catch (erro) {
+    console.error("Erro ao buscar a matéria:", erro.message);
+    throw erro;
+  }
+}
+
 // Função assíncrona para atualizar os campos de uma matéria no banco de dados
 const atualizarMateria = async (materiaId, novosDados) => {
   try {
@@ -37,16 +61,22 @@ const atualizarMateria = async (materiaId, novosDados) => {
     }
 
     // Verifique se a matéria existe
-    const materia = await Materia.findById(materiaId);
-    if (!materia) {
-      throw new Error("Matéria não encontrada");
+    const materiaExistente = encontrarMateriaPorId(materiaId)
+    if (!materiaExistente) {
+      throw new Error("Matéria não encontrada para atualização");
     }
 
-    // Atualize a matéria com os novos dados, incluindo o campo tempoAlocado
+    // Atualiza apenas os campos tempoAlocado e prioridade
+    const camposAtualizados = {
+      ...(novosDados.tempoEstimado !== undefined && { tempoEstimado: novosDados.tempoEstimado }),
+      ...(novosDados.prioridade !== undefined && { prioridade: novosDados.prioridade }),
+    };
+
+    // Atualize a matéria com os novos dados de tampo estimado e prioridade
     const materiaAtualizada = await Materia.findByIdAndUpdate(
-      materiaId,
-      novosDados,
-      { new: true }
+        materiaId,
+        camposAtualizados,
+        { new: true } // Retorna o documento atualizado
     );
 
     // Retorna a matéria atualizada

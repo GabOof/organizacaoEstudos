@@ -29,6 +29,7 @@ app.post(
   async (req, res) => await estudanteController.salvarEstudante(req, res)
 );
 
+// TODO criar materiaController e chamar um método de salvarMateria do controller. Main não pode chamar DAO direto
 // Rota para criar uma matéria
 app.post("/materia", async (req, res) => {
   try {
@@ -52,6 +53,7 @@ app.post("/materia", async (req, res) => {
   }
 });
 
+// TODO criar um método no estudanteController de buscarEstudantePorNome. Main não pode chamar DAO diretamente
 // Rota para buscar estudante pelo nome
 app.get("/estudante/nome/:nome", async (req, res) => {
   const { nome } = req.params;
@@ -112,6 +114,7 @@ router.post("/materia/estudar/:materiaId", async (req, res) => {
   }
 });
 
+// TODO criar materiaController e chamar um método de atualizaMataria do controller. Main não pode chamar DAO direto
 // Rota para editar uma matéria no cronograma
 app.post("/cronograma/editar/:materiaId", async (req, res) => {
   const { materiaId } = req.params;
@@ -119,16 +122,12 @@ app.post("/cronograma/editar/:materiaId", async (req, res) => {
 
   try {
     const novosDados = {};
-    if (tempoAlocado) novosDados.tempoAlocado = tempoAlocado;
+    if (tempoAlocado) novosDados.tempoEstimado = tempoAlocado;
     if (prioridade) novosDados.prioridade = prioridade;
 
-    // Chama o controller para editar a matéria
-    const cronogramaAtualizado = await CronogramaController.editarMateria(
-      materiaId,
-      novosDados
-    );
+    const  materiaAtualizada = MateriaDAO.atualizarMateria(materiaId, novosDados)
 
-    res.json(cronogramaAtualizado);
+    res.json(materiaAtualizada);
   } catch (error) {
     console.error("Erro na edição do cronograma:", error);
     if (error.message.includes("Matéria não encontrada")) {
