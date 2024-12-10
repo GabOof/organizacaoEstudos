@@ -122,6 +122,8 @@ document
                 <th>Matéria</th>
                 <th>Tempo Alocado (horas)</th>
                 <th>Estudada</th>
+                <th>ID da Matéria</th> <!-- Nova coluna para o ID -->
+                <th>Prioridade</th> <!-- Nova coluna para a Prioridade -->
               </tr>
             </thead>
             <tbody>
@@ -142,9 +144,13 @@ document
                           }
                         </button>
                       </td>
+                      <td>${materia._id}</td> <!-- Exibindo o ID da matéria -->
+                      <td>${
+                        materia.prioridade
+                      }</td> <!-- Exibindo a prioridade -->
                     </tr>`
                 )
-              .join("")} <!-- Gera dinamicamente as linhas da tabela -->
+                .join("")} <!-- Gera dinamicamente as linhas da tabela -->
             </tbody>
           </table>`;
 
@@ -163,7 +169,9 @@ document
               const materiaAtualizada = await response.json();
               if (response.ok) {
                 alert("Matéria marcada como estudada!");
-                button.innerText = "Estudada"; // Atualiza o botão
+                button.innerText = "Estudada"; // Atualiza o texto do botão
+                button.disabled = true; // Desativa o botão
+                button.classList.add("btn-disabled");
               } else {
                 alert(
                   materiaAtualizada.message ||
@@ -186,6 +194,7 @@ document
     }
   });
 
+// Função para exibir o tooltip com a descrição da prioridade
 document.addEventListener("DOMContentLoaded", function () {
   // Adiciona um ouvinte de evento para todos os ícones de tooltip
   document.querySelectorAll(".tooltip-icon").forEach(function (icon) {
@@ -199,3 +208,46 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+// Função para editar matéria no cronograma
+document
+  .getElementById("form-editar-materia")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault(); // Evita o recarregamento da página
+
+    const materiaId = document.getElementById("materia-id").value;
+    const novoTempo = document.getElementById("novo-tempo").value;
+    const novaPrioridade = document.getElementById("nova-prioridade").value;
+
+    // Valida se os campos estão preenchidos corretamente
+    if (!materiaId || !novoTempo || !novaPrioridade) {
+      alert("Todos os campos devem ser preenchidos!");
+      return;
+    }
+
+    try {
+      // Faz a requisição para editar a matéria no cronograma
+      const response = await fetch(
+        `${API_URL}/cronograma/editar/${materiaId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tempoAlocado: novoTempo,
+            prioridade: novaPrioridade,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        tempoAlocado = data.tempoAlocado;
+        prioridade = data.prioridade;
+        alert("Matéria atualizada com sucesso!");
+      } else {
+        alert(data.message || "Erro ao editar matéria");
+      }
+    } catch (error) {
+      alert("Erro ao conectar ao servidor");
+    }
+  });

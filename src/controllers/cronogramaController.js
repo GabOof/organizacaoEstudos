@@ -13,11 +13,14 @@ const buscarCronogramaPorEstudante = async (estudanteId) => {
       estudante: estudanteId,
     }).populate("materias._id");
 
+    console.log("Cronograma encontrado:", cronograma);
+
     if (!cronograma) return null; // Retorna null se não houver cronograma
 
     // Atualiza o status de 'estudada' para as matérias no cronograma
     for (const item of cronograma.materias) {
       const materiaAtualizada = await Materia.findById(item._id); // Busca matéria mais recente
+      console.log("Matéria atualizada:", materiaAtualizada);
       if (materiaAtualizada && item.estudada !== materiaAtualizada.estudada) {
         // Sincroniza status de 'estudada'
         item.estudada = materiaAtualizada.estudada;
@@ -55,12 +58,14 @@ const gerarCronograma = async (estudanteNome) => {
 
     // Caso exista um cronograma, atualiza as matérias com os dados mais recentes
     if (cronogramaExistente) {
+      const materiaDAO = MateriaDAO;
+
       // Atualiza as matérias do cronograma com as matérias mais recentes
       const materiasAtualizadas =
-        await MateriaDAO.encontrarMateriasPorEstudante(estudante._id);
+        await materiaDAO.encontrarMateriasPorEstudante(estudante._id);
 
       const cronogramaAtualizado = cronogramaExistente;
-      cronogramaAtualizado.materias = [];
+      cronogramaAtualizado.materias = []; // Limpar as matérias existentes
 
       let tempoDisponivel = estudante.tempoDisponivel;
 
@@ -69,6 +74,7 @@ const gerarCronograma = async (estudanteNome) => {
         if (tempoDisponivel >= materia.tempoEstimado) {
           cronogramaAtualizado.materias.push({
             nome: materia.nome,
+            prioridade: materia.prioridade,
             tempoAlocado: materia.tempoEstimado,
             estudada: materia.estudada,
             _id: materia._id,
@@ -77,6 +83,7 @@ const gerarCronograma = async (estudanteNome) => {
         } else if (tempoDisponivel > 0) {
           cronogramaAtualizado.materias.push({
             nome: materia.nome,
+            prioridade: materia.prioridade,
             tempoAlocado: tempoDisponivel,
             estudada: materia.estudada,
             _id: materia._id,
@@ -87,8 +94,15 @@ const gerarCronograma = async (estudanteNome) => {
         }
       }
 
-      // Atualiza o cronograma no banco de dados com as novas matérias e tempo alocado
+      // Atualize o cronograma completo
       await cronogramaAtualizado.save();
+
+      for (const materia of cronogramaAtualizado.materias) {
+        await MateriaDAO.atualizarMateria(materia._id, {
+          tempoAlocado: materia.tempoAlocado,
+        });
+      }
+
       return cronogramaAtualizado; // Retorna o cronograma atualizado
     }
 
@@ -177,8 +191,54 @@ const marcarMateriaEstudada = async (materiaId) => {
   }
 };
 
+// Função para editar uma matéria no cronograma
+const editarMateria = async (materiaId, novaInformacao) => {
+  try {
+    // Instanciando o MateriaDAO para acessar os métodos
+    const materiaDAO = MateriaDAO;
+
+    // Atualizar a matéria no banco de dados
+    const materiaAtualizada = await materiaDAO.atualizarMateria(
+      materiaId,
+      novaInformacao
+    );
+
+    // Agora, precisamos atualizar o cronograma para refletir a alteração no tempoAlocado
+    const cronograma = await Cronograma.findOne({
+      "materias._id": materiaId,
+    });
+
+    if (!cronograma) {
+      throw new Error("Cronograma não encontrado");
+    }
+
+    // Encontre a matéria no cronograma
+    const materiaNoCronograma = cronograma.materias.find(
+      (materia) => String(materia._id) === String(materiaId)
+    );
+
+    if (materiaNoCronograma) {
+      // Atualizando o tempo alocado no cronograma
+      if (novaInformacao.tempoAlocado) {
+        console.log("Atualizando tempo alocado:", novaInformacao.tempoAlocado);
+        materiaNoCronograma.tempoAlocado = novaInformacao.tempoAlocado;
+      }
+    }
+
+    // Salve o cronograma com o novo tempo alocado
+    await cronograma.save();
+    console.log("Cronograma atualizado com novo tempo alocado");
+
+    return materiaAtualizada; // Retorna a matéria atualizada
+  } catch (err) {
+    console.error("Erro ao editar matéria:", err);
+    throw err; // Lançar erro novamente para ser tratado no nível superior
+  }
+};
+
 module.exports = {
   gerarCronograma,
   marcarMateriaEstudada,
   buscarCronogramaPorEstudante,
+  editarMateria,
 };
