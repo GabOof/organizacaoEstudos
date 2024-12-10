@@ -25,6 +25,7 @@ document
       if (response.ok) {
         estudanteId = data._id; // Atualiza o estudanteId global com o valor correto
         alert("Estudante salvo com sucesso!"); // Informa o usuário sobre o sucesso
+        document.getElementById("form-estudante").reset(); // Limpa o formulário
       } else {
         alert(data.message || "Erro ao salvar estudante");
       }
@@ -83,6 +84,7 @@ document
 
       if (response.ok) {
         alert("Matéria salva com sucesso!"); // Informa o usuário sobre o sucesso
+        document.getElementById("form-materia").reset(); // Limpa o formulário
       } else {
         alert(data.message || "Erro ao salvar matéria");
       }
@@ -252,6 +254,7 @@ document
         tempoAlocado = data.tempoAlocado;
         prioridade = data.prioridade;
         alert("Matéria atualizada com sucesso!");
+        document.getElementById("form-editar-materia").reset(); // Limpa o formulário
       } else {
         alert(data.message || "Erro ao editar matéria");
       }
