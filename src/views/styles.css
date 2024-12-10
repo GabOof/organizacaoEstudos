@@ -166,13 +166,6 @@ button:focus {
   outline: none; /* Remove a borda ao focar */
 }
 
-/* Botão desativado */
-.btn-disabled {
-  background-color: #ccc; /* Cor de fundo para indicar estado desativado */
-  cursor: not-allowed; /* Muda o cursor para indicar que não pode ser clicado */
-  color: #666; /* Cor do texto para desativado */
-}
-
 /* Melhorar a aparência dos inputs */
 input,
 select,
