@@ -37,6 +37,7 @@ const buscarCronogramaPorEstudante = async (estudanteId) => {
 // Função para gerar o cronograma de estudos de um estudante
 const gerarCronograma = async (estudanteNome) => {
   try {
+    // Instancia o DAO do estudante
     const dao = new EstudanteDAO();
 
     // Busca o estudante no banco de dados usando o nome
@@ -122,8 +123,8 @@ const gerarCronograma = async (estudanteNome) => {
       if (tempoDisponivel >= materia.tempoEstimado) {
         // Se o tempo disponível for suficiente, aloca o tempo total da matéria
         cronograma.push({
-          nome: materia.nome,
-          prioridade: materia.prioridade,
+          nome: materia.nome, // Nome da matéria
+          prioridade: materia.prioridade, // Prioridade da matéria
           tempoAlocado: materia.tempoEstimado, // Tempo alocado à matéria
           estudada: materia.estudada, // Estudante já estudou a matéria ou não
           _id: materia._id, // ID da matéria
@@ -133,8 +134,8 @@ const gerarCronograma = async (estudanteNome) => {
       } else if (tempoDisponivel > 0) {
         // Se o tempo disponível for menor que o necessário, aloca o tempo restante
         cronograma.push({
-          nome: materia.nome,
-          prioridade: materia.prioridade,
+          nome: materia.nome, // Nome da matéria
+          prioridade: materia.prioridade, // Prioridade da matéria
           tempoAlocado: tempoDisponivel, // Tempo alocado é o que resta disponível
           estudada: materia.estudada, // Estudante já estudou a matéria ou não
           _id: materia._id, // ID da matéria
@@ -175,13 +176,14 @@ const marcarMateriaEstudada = async (materiaId) => {
 
     // Marca a matéria como estudada
     materia.estudada = true;
+    // Salva a matéria atualizada no banco de dados
     await materia.save();
 
     // Atualiza o cronograma associado ao estudante da matéria
     const estudanteId = materia.estudante; // ID do estudante associado à matéria
     const cronogramaAtualizado = await buscarCronogramaPorEstudante(
       estudanteId
-    );
+    ); // Busca o cronograma atualizado
 
     return cronogramaAtualizado; // Retorna o cronograma atualizado
   } catch (error) {
@@ -190,6 +192,7 @@ const marcarMateriaEstudada = async (materiaId) => {
   }
 };
 
+// Exporta as funções para serem usadas em outras partes do código
 module.exports = {
   gerarCronograma,
   marcarMateriaEstudada,
