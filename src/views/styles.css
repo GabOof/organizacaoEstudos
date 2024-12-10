@@ -22,6 +22,7 @@ header {
   margin-bottom: 30px; /* Espaçamento inferior */
 }
 
+/* Estilo do título principal */
 header h1 {
   font-size: 2.5em; /* Destaque para o título */
   color: #0056b3; /* Azul para destacar o título */
@@ -30,7 +31,7 @@ header h1 {
 
 /* Estrutura principal: ajusta o layout com flexbox */
 main {
-  display: flex;
+  display: flex; /* Alinha os elementos lado a lado */
   flex-wrap: wrap; /* Permite que os elementos sejam empilhados */
   gap: 20px; /* Espaçamento entre os elementos */
   justify-content: flex-start; /* Alinhamento à esquerda */
@@ -57,12 +58,14 @@ main {
   transition: transform 0.3s ease-in-out; /* Efeito de hover */
 }
 
+/* T'ítulo dos cartões */
 .card h2 {
   font-size: 1.6em; /* Tamanho do título */
   color: #0056b3; /* Azul para destacar títulos */
   margin-bottom: 15px; /* Espaçamento inferior */
 }
 
+/* Descrição dos cartões */
 .card p {
   color: #777; /* Texto de descrição mais suave */
   font-size: 1.1em; /* Tamanho do texto */
@@ -73,7 +76,7 @@ main {
   display: flex; /* Alinha os elementos lado a lado */
   flex-direction: column; /* Empilha os elementos em telas menores */
   gap: 20px; /* Espaçamento entre os elementos */
-  width: 100%;
+  width: 100%; /* Ocupa toda a largura disponível */
 }
 
 /* Estilo do container de 'Gerar Cronograma' */
@@ -87,11 +90,13 @@ main {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
+/* Título 'Resultado do Cronograma' */
 #resultado-cronograma table {
   width: 100%; /* Ajusta a tabela à largura do container */
   border-collapse: collapse; /* Remove espaçamento entre células */
 }
 
+/* Estilo para células da tabela */
 #resultado-cronograma th,
 #resultado-cronograma td {
   border: 1px solid #ddd; /* Bordas discretas */
@@ -99,6 +104,7 @@ main {
   padding: 12px; /* Espaçamento interno */
 }
 
+/* Estilo para cabeçalhos e linhas alternadas */
 #resultado-cronograma th {
   background-color: #f9f9f9; /* Fundo cinza claro para cabeçalhos */
   color: #0056b3; /* Cor do texto do cabeçalho */
@@ -123,6 +129,7 @@ main {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
 }
 
+/* Título 'Editar Materiais' */
 #editar-materias h2 {
   color: #0056b3; /* Azul para destacar o título */
   margin-bottom: 15px; /* Espaçamento inferior */
