@@ -5,7 +5,7 @@ let estudanteId = null;
 
 // Função para enviar dados do formulário de estudante
 document
-  .getElementById("form-estudante")
+  .getElementById("form-estudante") // Seleciona o formulário de estudante
   .addEventListener("submit", async (e) => {
     e.preventDefault(); // Evita o recarregamento da página ao submeter o formulário
 
@@ -47,6 +47,7 @@ document
       "nome-estudante-materia"
     ).value;
 
+    // Valida se o campo de nome do estudante está preenchido
     if (!nomeEstudante) {
       alert("Por favor, forneça o nome do estudante!");
       return;
@@ -57,14 +58,15 @@ document
       const responseEstudante = await fetch(
         `${API_URL}/estudante/nome/${nomeEstudante}`
       );
-      const dataEstudante = await responseEstudante.json();
+      const dataEstudante = await responseEstudante.json(); // Extrai a resposta da API como JSON
 
+      // Verifica se o estudante foi encontrado
       if (!responseEstudante.ok) {
         alert(dataEstudante.message || "Estudante não encontrado");
         return;
       }
 
-      const estudanteId = dataEstudante._id;
+      const estudanteId = dataEstudante._id; // ID do estudante
 
       // Faz uma requisição POST para criar uma matéria associada ao estudante
       const response = await fetch(`${API_URL}/materia`, {
@@ -74,7 +76,7 @@ document
           nome,
           prioridade,
           tempoEstimado,
-          estudanteId, // Adiciona o ID do estudante
+          estudanteId,
         }), // Corpo da requisição com os dados da matéria
       });
       const data = await response.json(); // Extrai a resposta da API como JSON
@@ -122,8 +124,8 @@ document
                 <th>Matéria</th>
                 <th>Tempo Alocado (horas)</th>
                 <th>Estudada</th>
-                <th>ID da Matéria</th> <!-- Nova coluna para o ID -->
-                <th>Prioridade</th> <!-- Nova coluna para a Prioridade -->
+                <th>ID da Matéria</th>
+                <th>Prioridade</th>
               </tr>
             </thead>
             <tbody>
@@ -144,10 +146,8 @@ document
                           }
                         </button>
                       </td>
-                      <td>${materia._id}</td> <!-- Exibindo o ID da matéria -->
-                      <td>${
-                        materia.prioridade
-                      }</td> <!-- Exibindo a prioridade -->
+                      <td>${materia._id}</td>
+                      <td>${materia.prioridade}</td>
                     </tr>`
                 )
                 .join("")} <!-- Gera dinamicamente as linhas da tabela -->
@@ -157,7 +157,7 @@ document
         // Insere a tabela gerada no elemento de resultados
         document.getElementById("resultado-cronograma").innerHTML = tabela;
 
-        // Adiciona eventos de "Marcar como Estudada" nos novos botões
+        // Adiciona eventos de "Marcar como Estudada" nos botões
         document.querySelectorAll(".btn-estudar").forEach((button) => {
           button.addEventListener("click", async () => {
             const materiaId = button.getAttribute("data-materia-id");
@@ -167,6 +167,8 @@ document
                 { method: "POST" }
               );
               const materiaAtualizada = await response.json();
+
+              // Verifica se a requisição foi bem-sucedida
               if (response.ok) {
                 alert("Matéria marcada como estudada!");
                 button.innerText = "Estudada"; // Atualiza o texto do botão
@@ -215,6 +217,7 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault(); // Evita o recarregamento da página
 
+    // Captura os valores dos campos do formulário
     const materiaId = document.getElementById("materia-id").value;
     const novoTempo = document.getElementById("novo-tempo").value;
     const novaPrioridade = document.getElementById("nova-prioridade").value;
@@ -240,6 +243,7 @@ document
       );
       const data = await response.json();
 
+      // Verifica se a requisição foi bem-sucedida
       if (response.ok) {
         tempoAlocado = data.tempoAlocado;
         prioridade = data.prioridade;
