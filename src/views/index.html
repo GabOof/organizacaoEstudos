@@ -72,7 +72,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="prioridade">
+            <label for="prioridade" class="titulo-prioridade">
               Prioridade:
               <!-- Ícone de Informação -->
               <span class="tooltip-icon">
@@ -120,6 +120,38 @@
         </form>
         <!-- Área onde o cronograma gerado será exibido -->
         <div id="resultado-cronograma"></div>
+      </section>
+
+      <!-- Seção para edição das matérias do cronograma -->
+      <section class="card" id="editar-cronograma">
+        <h2>Editar Matérias no Cronograma</h2>
+        <form id="form-editar-materia">
+          <div class="form-group">
+            <label for="materia-id">ID da Matéria:</label>
+            <input
+              type="text"
+              id="materia-id"
+              placeholder="Digite o ID da matéria"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="novo-tempo">Novo Tempo Alocado (horas):</label>
+            <input type="number" id="novo-tempo" placeholder="Ex: 5" required />
+          </div>
+          <div class="form-group">
+            <label for="nova-prioridade">Nova Prioridade:</label>
+            <input
+              type="number"
+              id="nova-prioridade"
+              min="1"
+              max="5"
+              placeholder="Ex: 3"
+              required
+            />
+          </div>
+          <button type="submit" class="btn">Salvar Alterações</button>
+        </form>
       </section>
     </main>
 

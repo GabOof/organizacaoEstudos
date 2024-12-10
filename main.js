@@ -112,6 +112,32 @@ router.post("/materia/estudar/:materiaId", async (req, res) => {
   }
 });
 
+// Rota para editar uma matéria no cronograma
+app.post("/cronograma/editar/:materiaId", async (req, res) => {
+  const { materiaId } = req.params;
+  const { tempoAlocado, prioridade } = req.body;
+
+  try {
+    const novosDados = {};
+    if (tempoAlocado) novosDados.tempoAlocado = tempoAlocado;
+    if (prioridade) novosDados.prioridade = prioridade;
+
+    // Chama o controller para editar a matéria
+    const cronogramaAtualizado = await CronogramaController.editarMateria(
+      materiaId,
+      novosDados
+    );
+
+    res.json(cronogramaAtualizado);
+  } catch (error) {
+    console.error("Erro na edição do cronograma:", error);
+    if (error.message.includes("Matéria não encontrada")) {
+      return res.status(404).json({ message: "Matéria não encontrada" });
+    }
+    res.status(500).json({ message: "Erro ao editar matéria no cronograma" });
+  }
+});
+
 // Middleware para tratamento de erros
 app.use(router);
 
