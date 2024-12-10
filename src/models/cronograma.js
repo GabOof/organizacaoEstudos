@@ -12,7 +12,7 @@ const cronogramaSchema = new mongoose.Schema({
   // Array de objetos que armazena as matérias e o tempo alocado para cada uma
   materias: [
     {
-      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Materia" },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Materia" }, // ID da matéria (tipo ObjectId)
       nome: String, // Nome da matéria (tipo String)
       prioridade: Number, // Prioridade da matéria (tipo Number)
       tempoAlocado: Number, // Tempo alocado para a matéria (tipo Number)
