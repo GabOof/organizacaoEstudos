@@ -1,155 +1,209 @@
 /* Reset básico para garantir consistência de margens e espaçamentos entre navegadores */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin: 0; /* Remove margens padrão */
+  padding: 0; /* Remove espaçamento padrão */
+  box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
 }
 
-/* Corpo da página: define fonte padrão, cores de fundo e texto, e espaçamento geral */
+/* Corpo da página: fonte, cores e espaçamento */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fonte padrão */
   line-height: 1.6; /* Melhor leitura */
-  background-color: #f7f9fc; /* Fundo claro e suave */
+  background-color: #f4f7fc; /* Fundo suave */
   color: #333; /* Cor neutra para o texto */
   padding: 20px; /* Espaçamento interno */
+  min-height: 100vh; /* Preencher a altura da tela */
+  overflow: auto; /* Adiciona barra de rolagem quando necessário */
 }
 
-/* Cabeçalho: alinhamento centralizado e espaçamento inferior */
+/* Título centralizado no topo da página */
 header {
-  text-align: center;
-  margin-bottom: 20px;
+  text-align: center; /* Centraliza o conteúdo */
+  margin-bottom: 30px; /* Espaçamento inferior */
 }
 
+/* Estilo do título principal */
 header h1 {
   font-size: 2.5em; /* Destaque para o título */
-  color: #0056b3; /* Azul para chamar atenção */
+  color: #0056b3; /* Azul para destacar o título */
+  margin-bottom: 10px; /* Espaçamento inferior */
 }
 
-header p {
-  font-size: 1.2em; /* Menor que o título, mas ainda legível */
-  color: #666; /* Tom mais suave para o subtítulo */
-}
-
-/* Estrutura principal: flexbox para alinhar seções e ajustar ao espaço disponível */
+/* Estrutura principal: ajusta o layout com flexbox */
 main {
-  display: flex;
-  flex-wrap: wrap; /* Permite que os cartões ajustem-se em múltiplas linhas */
+  display: flex; /* Alinha os elementos lado a lado */
+  flex-wrap: wrap; /* Permite que os elementos sejam empilhados */
+  gap: 20px; /* Espaçamento entre os elementos */
+  justify-content: flex-start; /* Alinhamento à esquerda */
+  margin-bottom: 30px; /* Espaçamento inferior */
+}
+
+/* Container principal (criar cronograma e criar matéria) */
+.container-principal {
+  display: flex; /* Alinha os cartões lado a lado */
   gap: 20px; /* Espaçamento entre os cartões */
-  justify-content: center; /* Centraliza os cartões no eixo principal */
-}
-
-/* Cartões: fundo branco, borda arredondada e sombra suave para destaque */
-.card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sutil sombra */
-  padding: 20px;
-  width: 300px; /* Largura fixa para uniformidade */
-}
-
-.card h2 {
-  margin-bottom: 15px; /* Espaçamento inferior */
-  font-size: 1.5em; /* Tamanho maior para subtítulos */
-  color: #333;
-}
-
-/* Estilização de formulários: espaçamento e organização */
-.form-group {
-  margin-bottom: 15px; /* Espaçamento entre campos */
-}
-
-label {
-  font-weight: bold; /* Destaque para os rótulos */
-  display: block; /* Garante que o rótulo ocupe a linha inteira */
-  margin-bottom: 5px;
-  color: #555; /* Tom intermediário para o texto */
-}
-
-input {
+  flex-wrap: wrap; /* Empilha os cartões em telas menores */
+  justify-content: space-between; /* Distribui o espaço entre os cartões */
   width: 100%; /* Ocupa toda a largura disponível */
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ddd; /* Borda discreta */
-  border-radius: 4px; /* Bordas arredondadas */
 }
 
-/* Botões: estilo padrão e efeito de hover */
-button.btn {
-  background-color: #0056b3; /* Azul sólido */
-  color: white;
-  padding: 10px 15px; /* Espaçamento interno */
-  font-size: 1em;
-  border: none; /* Remove bordas padrão */
-  border-radius: 4px; /* Bordas arredondadas */
-  cursor: pointer; /* Mostra que o botão é clicável */
-  text-align: center;
-  width: 100%; /* Botão ocupa toda a largura */
+/* Cartões de criação (Criar Cronograma e Criar Matéria) */
+.card {
+  background: #fff; /* Fundo branco */
+  border: 1px solid #e0e0e0; /* Borda suave */
+  border-radius: 12px; /* Cantos arredondados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+  padding: 30px; /* Espaçamento interno */
+  width: 48%; /* Largura dos cartões */
+  transition: transform 0.3s ease-in-out; /* Efeito de hover */
 }
 
-button.btn:hover {
-  background-color: #003d80; /* Cor mais escura ao passar o mouse */
+/* T'ítulo dos cartões */
+.card h2 {
+  font-size: 1.6em; /* Tamanho do título */
+  color: #0056b3; /* Azul para destacar títulos */
+  margin-bottom: 15px; /* Espaçamento inferior */
 }
 
-/* Estilo para tabela de resultados: bordas e alternância de cores */
+/* Descrição dos cartões */
+.card p {
+  color: #777; /* Texto de descrição mais suave */
+  font-size: 1.1em; /* Tamanho do texto */
+}
+
+/* Container de 'Gerar Cronograma' e 'Editar Materiais' mais abaixo */
+.container-secundario {
+  display: flex; /* Alinha os elementos lado a lado */
+  flex-direction: column; /* Empilha os elementos em telas menores */
+  gap: 20px; /* Espaçamento entre os elementos */
+  width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/* Estilo do container de 'Gerar Cronograma' */
 #resultado-cronograma {
-  margin-top: 20px; /* Espaçamento acima da tabela */
+  background-color: #fff; /* Fundo branco */
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 12px; /* Cantos arredondados */
+  padding: 20px; /* Espaçamento interno */
+  min-height: 400px; /* Altura mínima */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
+/* Título 'Resultado do Cronograma' */
 #resultado-cronograma table {
   width: 100%; /* Ajusta a tabela à largura do container */
   border-collapse: collapse; /* Remove espaçamento entre células */
 }
 
+/* Estilo para células da tabela */
 #resultado-cronograma th,
 #resultado-cronograma td {
   border: 1px solid #ddd; /* Bordas discretas */
   text-align: left; /* Alinhamento do texto */
-  padding: 10px; /* Espaçamento interno */
+  padding: 12px; /* Espaçamento interno */
 }
 
+/* Estilo para cabeçalhos e linhas alternadas */
 #resultado-cronograma th {
-  background-color: #f4f4f4; /* Fundo cinza claro para cabeçalhos */
-  color: #333; /* Cor do texto do cabeçalho */
+  background-color: #f9f9f9; /* Fundo cinza claro para cabeçalhos */
+  color: #0056b3; /* Cor do texto do cabeçalho */
+  font-weight: bold; /* Texto em negrito */
 }
 
 #resultado-cronograma tr:nth-child(even) {
-  background-color: #f9f9f9; /* Alternância de cores entre linhas */
+  background-color: #f9f9f9; /* Alternância de cores mais suave */
 }
 
-/* Rodapé: centralizado e com tom mais discreto */
+#resultado-cronograma tr:hover {
+  background-color: #f1f1f1; /* Destaque ao passar o mouse */
+}
+
+/* Estilo para 'Editar Materiais' */
+#editar-materias {
+  background-color: #fff; /* Fundo branco */
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 12px; /* Cantos arredondados */
+  padding: 20px; /* Espaçamento interno */
+  min-height: 300px; /* Altura mínima */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+}
+
+/* Título 'Editar Materiais' */
+#editar-materias h2 {
+  color: #0056b3; /* Azul para destacar o título */
+  margin-bottom: 15px; /* Espaçamento inferior */
+}
+
+/* Rodapé: centralizado e com tom discreto */
 footer {
   text-align: center;
-  margin-top: 20px; /* Espaçamento superior */
+  margin-top: 40px; /* Espaçamento superior */
   font-size: 0.9em; /* Texto menor */
-  color: #666; /* Cor mais clara */
+  color: #777; /* Cor mais clara */
+}
+
+/* Estilo para botões */
+button {
+  background-color: #0056b3; /* Azul para destacar */
+  color: white; /* Texto branco */
+  padding: 12px 20px; /* Espaçamento interno */
+  border: none; /* Remove a borda */
+  border-radius: 6px; /* Cantos arredondados */
+  cursor: pointer; /* Muda o cursor ao passar por cima */
+  font-size: 1.1em; /* Tamanho do texto */
+  transition: background-color 0.3s; /* Efeito de hover */
+  width: 100%; /* Ocupa toda a largura disponível */
+  margin-top: 20px; /* Espaçamento entre o botão e os elementos acima */
+  margin-bottom: 20px; /* Espaçamento entre o botão e os elementos abaixo */
+}
+
+button:hover {
+  background-color: #003d80; /* Escurece o azul ao passar o mouse */
+}
+
+button:focus {
+  outline: none; /* Remove a borda ao focar */
+}
+
+/* Melhorar a aparência dos inputs */
+input,
+select,
+textarea {
+  width: 100%; /* Ocupa toda a largura disponível */
+  padding: 12px; /* Espaçamento interno */
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 6px; /* Cantos arredondados */
+  font-size: 1.1em; /* Tamanho do texto */
+  margin-top: 15px; /* Espaço maior entre os campos de entrada */
+  box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
+  transition: border-color 0.3s; /* Efeito de transição */
+}
+
+/* Destaque ao focar nos campos de entrada */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0056b3; /* Destaque ao focar */
+  outline: none; /* Remove a borda padrão */
 }
 
 /* Tooltip Icon */
 .tooltip-icon {
-  font-size: 14px; /* Tamanho menor para o ícone */
-  color: #555; /* Cor preta para o ícone */
-  cursor: pointer; /* Cursor de mão ao passar o mouse */
-  margin-left: 8px; /* Espaço à esquerda do ícone */
+  font-size: 18px; /* Tamanho do ícone */
+  color: #0056b3; /* Azul para destacar */
+  cursor: pointer; /* Muda o cursor ao passar por cima */
+  margin-left: 8px; /* Espaçamento à esquerda */
+  align-items: center; /* Alinha verticalmente */
 }
 
-/* Estilo do campo de input e label */
-.form-group {
-  position: relative; /* Necessário para o ícone ser posicionado de forma absoluta dentro do form-group */
-  margin-bottom: 15px; /* Espaço entre os campos */
-}
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-principal {
+    flex-direction: column; /* Empilha os cartões em telas menores */
+  }
 
-/* Alinha o label e o ícone */
-label {
-  display: flex;
-  justify-content: space-between; /* Distribui espaço entre o texto do label e o ícone */
-  align-items: center; /* Alinha verticalmente o texto e o ícone */
-  font-size: 16px;
-  margin-bottom: 5px; /* Distância do label para o input */
-  position: relative; /* Permite o ícone ser posicionado à direita do label */
-}
-
-/* Estilo do input */
-input {
-  padding-right: 30px; /* Espaço extra à direita para o ícone não se sobrepor */
+  .card {
+    width: 100%; /* Cartões ocupam toda a largura em telas pequenas */
+  }
 }
