@@ -138,7 +138,11 @@ document
                       <td>
                         <button class="btn-estudar" data-materia-id="${
                           materia._id
-                        }">
+                        }" ${
+                    materia.estudada
+                      ? 'disabled style="cursor:not-allowed;"'
+                      : ""
+                  }>
                           ${
                             materia.estudada
                               ? "Estudada"
@@ -150,7 +154,7 @@ document
                       <td>${materia.prioridade}</td>
                     </tr>`
                 )
-                .join("")} <!-- Gera dinamicamente as linhas da tabela -->
+                .join("")}
             </tbody>
           </table>`;
 
@@ -173,7 +177,7 @@ document
                 alert("Matéria marcada como estudada!");
                 button.innerText = "Estudada"; // Atualiza o texto do botão
                 button.disabled = true; // Desativa o botão
-                button.classList.add("btn-disabled");
+                button.style.cursor = "not-allowed";
               } else {
                 alert(
                   materiaAtualizada.message ||
