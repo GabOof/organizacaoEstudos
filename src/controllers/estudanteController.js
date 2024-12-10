@@ -39,7 +39,7 @@ class EstudanteController {
     async buscarEstudantePorNome(req, res) {
         try {
             const nome = req.params.nome;
-            const estudante = await this.estudanteDAO.buscarEstudantePorId(nome);
+            const estudante = await this.estudanteDAO.buscarEstudantePorNome(nome);
             if (estudante) {
                 res.status(200).json(estudante);
             } else {

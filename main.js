@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const MongoDB = require("./src/data/MongoDBConnection");
+//const MySQLDB = require("./src/data/MySQLConnection");
 const MateriaDAO = require("./src/data/materiaDAO");
 const EstudanteController = require("./src/controllers/estudanteController");
 const EstudanteDAOMongo = require("./src/data/EstudanteDAOMongo");
+//const EstudanteDAOMySQL = require("./src/data/EstudanteDAOMySQL");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
@@ -21,7 +23,8 @@ app.use(cors());
 app.use(express.json());
 
 // Instanciando controller do estudante
-const estudanteController = new EstudanteController(new EstudanteDAOMongo());
+//const estudanteController = new EstudanteController(new EstudanteDAOMySQL(database.getPool())); // Conexão com MySQL
+const estudanteController = new EstudanteController(new EstudanteDAOMongo()); // Conexão com MongoDB
 
 // Rota para criar um estudante
 app.post(
@@ -29,6 +32,7 @@ app.post(
   async (req, res) => await estudanteController.salvarEstudante(req, res)
 );
 
+// TODO passar a criação de matéria para um controller, main não vai executar essa lógica, só chamar métodos como em post de estudante
 // Rota para criar uma matéria
 app.post("/materia", async (req, res) => {
   try {
@@ -52,7 +56,12 @@ app.post("/materia", async (req, res) => {
   }
 });
 
-// Rota para buscar estudante pelo nome
+app.get(
+    '/estudante/nome/:nome',
+    async (req, res) => await estudanteController.buscarEstudantePorNome(req, res)
+);
+
+/*// Rota para buscar estudante pelo nome
 app.get("/estudante/nome/:nome", async (req, res) => {
   const { nome } = req.params;
 
@@ -73,8 +82,9 @@ app.get("/estudante/nome/:nome", async (req, res) => {
       .status(500)
       .json({ message: "Erro ao buscar estudante", error: error.message }); // Retorna erro 500 se falhar ao buscar
   }
-});
+});*/
 
+// TODO passar a criação do cronograma para o controller, main não vai executar essa lógica, só chamar método
 // Rota para gerar o cronograma
 app.get("/cronograma/:estudanteNome", async (req, res) => {
   // Recupera o nome do estudante da URL
@@ -97,6 +107,7 @@ app.get("/cronograma/:estudanteNome", async (req, res) => {
   }
 });
 
+// TODO passar essa lógica para um controller
 // Rota para marcar uma matéria como estudada
 router.post("/materia/estudar/:materiaId", async (req, res) => {
   try {
