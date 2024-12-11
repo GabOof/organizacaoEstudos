@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const MongoDB = require("./src/data/MongoDBConnection");
-const MateriaDAO = require("./src/data/materiaDAO");
+const MongoDB = require("./src/data/connections/MongoDBConnection");
+const MateriaDAO = require("./src/data/materiaDAOs/materiaDAO");
 const EstudanteController = require("./src/controllers/estudanteController");
-const EstudanteDAOMongo = require("./src/data/EstudanteDAOMongo");
+const EstudanteDAOMongo = require("./src/data/estudanteDAOs/EstudanteDAOMongo");
 const CronogramaController = require("./src/controllers/cronogramaController");
 
 // Conexão com o banco de dados desejado
@@ -125,7 +125,10 @@ app.post("/cronograma/editar/:materiaId", async (req, res) => {
     if (tempoAlocado) novosDados.tempoEstimado = tempoAlocado;
     if (prioridade) novosDados.prioridade = prioridade;
 
-    const  materiaAtualizada = MateriaDAO.atualizarMateria(materiaId, novosDados)
+    const materiaAtualizada = MateriaDAO.atualizarMateria(
+      materiaId,
+      novosDados
+    );
 
     res.json(materiaAtualizada);
   } catch (error) {

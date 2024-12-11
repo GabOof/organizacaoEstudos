@@ -1,5 +1,5 @@
-const EstudanteDAO = require("../data/EstudanteDAOMongo");
-const MateriaDAO = require("../data/materiaDAO");
+const EstudanteDAO = require("../data/estudanteDAOs/EstudanteDAOMongo");
+const MateriaDAO = require("../data/materiaDAOs/materiaDAO");
 const Materia = require("../models/materia");
 const Cronograma = require("../models/cronograma");
 
