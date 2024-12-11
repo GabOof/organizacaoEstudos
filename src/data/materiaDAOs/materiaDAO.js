@@ -1,4 +1,4 @@
-const Materia = require("../models/materia");
+const Materia = require("../../models/materia");
 const mongoose = require("mongoose");
 
 // Função assíncrona para salvar uma nova matéria no banco de dados associada a um estudante
