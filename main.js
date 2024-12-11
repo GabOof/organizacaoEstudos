@@ -1,5 +1,5 @@
 const express = require("express");
-const MongoDB = require("./src/data/MongoDBConnection");
+const MongoDB = require("./src/data/connections/MongoDBConnection");
 const Router = require("./src/routes/Router");
 
 const database = new MongoDB(); // Instância da conexão com o banco de dados

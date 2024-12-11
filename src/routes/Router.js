@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const MateriaDAO = require("../data/materiaDAO");
+const MateriaDAO = require("../data/materiaDAOs/materiaDAO");
 const EstudanteController = require("../controllers/estudanteController");
-const EstudanteDAOMongo = require("../data/EstudanteDAOMongo");
+const EstudanteDAOMongo = require("../data/estudanteDAOs/EstudanteDAOMongo");
 const CronogramaController = require("../controllers/cronogramaController");
 
 // Classe para configurar as rotas da aplicação
