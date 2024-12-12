@@ -1,4 +1,4 @@
-// Interface serve como um contrato que todas as implementações específicas de DAO devem seguir.
+// Interface serve como um contrato que todas as implementações específicas de estudante DAO devem seguir
 class EstudanteDAOInterface {
 
     async salvarEstudante(estudante) {
