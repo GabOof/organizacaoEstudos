@@ -1,47 +1,62 @@
-const mongoose = require("mongoose");
+class Materia {
 
-// Define o esquema (estrutura) do modelo "Materia"
-const materiaSchema = new mongoose.Schema({
-  // Nome da matéria (campo obrigatório)
-  nome: {
-    type: String, // Tipo de dado String
-    required: true, // Campo obrigatório
-  },
+  constructor(nome, prioridade, tempoEstimado, estudanteId) {
+    this.id = null; // Banco de dados vai gerar o ID
+    this.nome = nome;
+    this.prioridade = prioridade;
+    this.tempoEstimado = tempoEstimado;
+    this.estudanteId = estudanteId; // Referência ao ID do estudante
+    this.estudada = false; // Por padrão, a matéria não é estudada
+    this.dataCriacao = new Date();
+  }
 
-  // Prioridade da matéria (campo obrigatório)
-  prioridade: {
-    type: Number, // Tipo de dado Number
-    required: true, // Campo obrigatório
-  },
+  getId() {
+    return this.id;
+  }
 
-  // Tempo estimado para a matéria (campo obrigatório)
-  tempoEstimado: {
-    type: Number, // Tipo de dado Number
-    required: true, // Campo obrigatório
-  },
+  setNome(nome) {
+    this.nome = nome;
+  }
 
-  // Referência ao ID do estudante
-  estudanteId: {
-    type: mongoose.Schema.Types.ObjectId, // Tipo ObjectId do MongoDB
-    ref: "Estudante", // Refere-se ao modelo Estudante
-    required: true, // Campo obrigatório
-  },
+  getNome() {
+    return this.nome;
+  }
 
-  // Indica se a matéria foi estudada
-  estudada: {
-    type: Boolean, // Tipo de dado Boolean
-    default: false, // Por padrão, a matéria não é estudada
-  },
+  setPrioridade(prioridade) {
+    this.prioridade = prioridade;
+  }
 
-  // Data de criação da metéria (por padrão, é a data atual)
-  dataCriacao: {
-    type: Date, // Tipo de dado Date para armazenar a data
-    default: Date.now, // Valor padrão é a data e hora atuais
-  },
-});
+  getPrioridade() {
+    return this.prioridade;
+  }
 
-// Cria o modelo "Materia" a partir do esquema definido
-const Materia = mongoose.model("Materia", materiaSchema);
+  setTempoEstimado(tempoEstimado) {
+    this.tempoEstimado = tempoEstimado;
+  }
 
-// Exporta o modelo para que possa ser usado em outras partes do código
+  getTempoEstimado() {
+    return this.tempoEstimado;
+  }
+
+  setEstudanteId(estudanteId) {
+    this.estudanteId = estudanteId;
+  }
+
+  getEstudanteId() {
+    return this.estudanteId;
+  }
+
+  setEstudada(estudada) {
+    this.estudada = estudada;
+  }
+
+  getEstudada() {
+    return this.estudada;
+  }
+
+  getDataCriacao() {
+    return this.dataCriacao;
+  }
+}
+
 module.exports = Materia;
