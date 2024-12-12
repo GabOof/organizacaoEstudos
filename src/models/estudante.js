@@ -3,8 +3,8 @@ class Estudante {
   constructor(nome, tempoDisponivel) {
     this.id = null; // Banco de dados vai gerar o ID
     this.nome = nome;
-    this.tempoDisponivel = tempoDisponivel;
-    this.dataCriacao = new Date();
+    this.tempoDisponivel = tempoDisponivel; // Tempo disponível para estudar
+    this.dataCriacao = new Date(); // Data de criação do estudante
   }
 
   getId() {

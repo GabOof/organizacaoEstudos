@@ -3,11 +3,11 @@ class Materia {
   constructor(nome, prioridade, tempoEstimado, estudanteId) {
     this.id = null; // Banco de dados vai gerar o ID
     this.nome = nome;
-    this.prioridade = prioridade;
-    this.tempoEstimado = tempoEstimado;
+    this.prioridade = prioridade; // Números altos indicam maior prioridade
+    this.tempoEstimado = tempoEstimado; // Tempo estimado para estudar a matéria
     this.estudanteId = estudanteId; // Referência ao ID do estudante
-    this.estudada = false; // Por padrão, a matéria não é estudada
-    this.dataCriacao = new Date();
+    this.estudada = false;
+    this.dataCriacao = new Date(); // Data de criação do cronograma
   }
 
   getId() {

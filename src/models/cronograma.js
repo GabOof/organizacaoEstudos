@@ -4,7 +4,7 @@ class Cronograma {
     this.id = null; // Banco de dados vai gerar o ID
     this.estudanteId = estudanteId; // Referência ao ID do estudante
     this.materias = materias; // Array de objetos representando as matérias
-    this.dataCriacao = new Date();
+    this.dataCriacao = new Date(); // Data de criação da matéria
   }
 
   getId() {

@@ -1,6 +1,7 @@
 const CronogramaDAOInterface = require("./CronogramaDAOInterface");
 const mongoose = require("mongoose");
 
+// Definição do schema da Cronograma
 const cronogramaSchema = new mongoose.Schema({
     estudanteId: { type: mongoose.Schema.Types.ObjectId, ref: "Estudante", required: true}, // Referência ao estudante associado
     materias: [
@@ -20,8 +21,10 @@ const CronogramaModel = mongoose.model("Cronograma", cronogramaSchema);
 
 class CronogramaDAOMongo extends CronogramaDAOInterface {
 
+    // Buscar o cronograma de um estudante específico
     async buscarCronogramaPorEstudante(estudanteId) {
         try {
+            // Buscando o cronograma usando o ID do estudante
             return await CronogramaModel.findOne({ estudante: estudanteId })
                 .populate("materias._id")
                 .exec();
@@ -31,11 +34,13 @@ class CronogramaDAOMongo extends CronogramaDAOInterface {
         }
     }
 
+    // Buscar o cronograma de um estudante específico
     async atualizarMateriasNoCronograma(cronogramaId, dadosAtualizados) {
         try {
+            // Atualiza o cronograma específico pelo ID
             const cronogramaAtualizado = await this.CronogramaModel.findByIdAndUpdate(
-                cronogramaId,           // ID do cronograma a ser atualizado
-                { $set: dadosAtualizados }, // Dados que serão atualizados
+                cronogramaId,
+                { $set: dadosAtualizados },
                 { new: true, runValidators: true } // Retornar o documento atualizado e validar
             );
             return cronogramaAtualizado;
@@ -45,13 +50,16 @@ class CronogramaDAOMongo extends CronogramaDAOInterface {
         }
     }
 
-
+    // Gerar um novo cronograma para o estudante
     async gerarCronograma(cronograma) {
         try {
+            // Cria uma instância do modelo CronogramaModel com os dados fornecidos
             const novoCronograma = new CronogramaModel({
                 estudanteId: cronograma.getEstudanteId(),
                 materias: cronograma.getMaterias(),
             });
+
+            // Salva o novo cronograma no banco de dados
             return await novoCronograma.save();
         } catch (error) {
             console.error(`Erro ao gerar cronograma: ${error.message}`);
@@ -59,14 +67,17 @@ class CronogramaDAOMongo extends CronogramaDAOInterface {
         }
     }
 
+    // Marcar uma matéria como estudada no cronograma
     async marcarMateriaEstudada(materiaId) {
         try {
+            // Atualiza a matéria específica no cronograma, marcando como estudada
             const cronograma = await CronogramaModel.findOneAndUpdate(
                 { "materias._id": materiaId },
                 { $set: { "materias.$.estudada": true } },
                 { new: true } // Retorna o documento atualizado
             ).exec();
 
+            // Verifica se o cronograma foi encontrado
             if (!cronograma) {
                 throw new Error("Matéria não encontrada no cronograma.");
             }

@@ -6,19 +6,23 @@ class MateriaController {
         this.materiaDAO = materiaDAO;
     }
 
-    // Salvar uma nova matéria
+    // Salvar uma nova matéria no banco de dados
     async salvarMateria(req, res) {
         try {
+            // Desestruturação dos dados recebidos no corpo da requisição
             const { nome, prioridade, tempoEstimado, estudanteId } = req.body;
 
-            // Validação básica
+            // Validação básica: todos os campos são obrigatórios
             if (!nome || !prioridade || !tempoEstimado || !estudanteId) {
                 return res.status(400).json({ error: "Todos os campos são obrigatórios" });
             }
 
+            // Cria uma instância do modelo de Matéria
             const materia = new Materia(nome, prioridade, tempoEstimado, estudanteId);
 
+            // Chama DAO de matéria para salvar a matéria no banco de dados através do DAO
             const novaMateria = await this.materiaDAO.salvarMateria(materia);
+
             res.status(201).json(novaMateria);
         } catch (error) {
             console.error(error.message);
@@ -26,16 +30,19 @@ class MateriaController {
         }
     }
 
-    // Buscar todas as matérias de um estudante
+    // Buscar todas as matérias de um estudante com base no ID do estudante
     async encontrarMateriasPorEstudante(req, res) {
         try {
             const { estudanteId } = req.params;
 
+            // Valida se o ID do estudante foi informado
             if (!estudanteId) {
                 return res.status(400).json({ error: "ID do estudante é obrigatório" });
             }
 
+            // Chama DAo de matéria para buscar as matérias do estudante
             const materias = await this.materiaDAO.encontrarMateriasPorEstudante(estudanteId);
+
             res.status(200).json(materias);
         } catch (error) {
             console.error(error.message);
@@ -44,17 +51,21 @@ class MateriaController {
     }
 
 
-    // Atualizar uma matéria pelo ID
+    // Atualizar os dados de uma matéria pelo ID
     async atualizarMateria(req, res) {
         try {
+            // Extrai o ID da matéria dos parâmetros da URL e os novos dados do corpo da requisição
             const { materiaId } = req.params;
             const novosDados = req.body;
 
+            // Valida se o ID da matéria foi informado
             if (!materiaId) {
                 return res.status(400).json({ error: "ID da matéria é obrigatório" });
             }
 
+            // Chama o DAO de matéria para atualizar a matéria com base no ID e nos novos dados
             const materiaAtualizada = await this.materiaDAO.atualizarMateria(materiaId, novosDados);
+
             res.status(200).json(materiaAtualizada);
         } catch (error) {
             console.error(error.message);

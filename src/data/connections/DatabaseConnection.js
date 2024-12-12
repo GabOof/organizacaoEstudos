@@ -1,5 +1,6 @@
 // Interface para a conexão com o banco de dados
 class DatabaseConnection {
+
     async connect() {
         throw new Error('Método "connect" deve ser implementado.');
     }
