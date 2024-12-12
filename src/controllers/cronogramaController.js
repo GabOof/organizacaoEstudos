@@ -1,200 +1,131 @@
-const EstudanteDAO = require("../data/estudanteDAOs/EstudanteDAOMongo");
-const MateriaDAO = require("../data/materiaDAOs/materiaDAO");
-const Materia = require("../models/materia");
 const Cronograma = require("../models/cronograma");
 
-const mongoose = require("mongoose");
+class CronogramaController {
 
-// Função para buscar o cronograma existente de um estudante
-const buscarCronogramaPorEstudante = async (estudanteId) => {
-  try {
-    // Busca o cronograma do estudante
-    const cronograma = await Cronograma.findOne({
-      estudante: estudanteId,
-    }).populate("materias._id");
-
-    if (!cronograma) return null; // Retorna null se não houver cronograma
-
-    // Atualiza o status de 'estudada' para as matérias no cronograma
-    for (const item of cronograma.materias) {
-      const materiaAtualizada = await Materia.findById(item._id); // Busca matéria mais recente
-      if (materiaAtualizada && item.estudada !== materiaAtualizada.estudada) {
-        // Sincroniza status de 'estudada'
-        item.estudada = materiaAtualizada.estudada;
-      }
-    }
-
-    // Salva as atualizações no cronograma, caso tenha mudado
-    await cronograma.save();
-
-    return cronograma; // Retorna o cronograma atualizado
-  } catch (error) {
-    console.error("Erro ao buscar cronograma:", error);
-    throw error;
+  constructor(cronogramaDAO, estudanteDAO, materiaDAO) {
+    this.cronogramaDAO = cronogramaDAO;
+    this.estudanteDAO = estudanteDAO;
+    this.materiaDAO = materiaDAO;
   }
-};
 
-// Função para gerar o cronograma de estudos de um estudante
-const gerarCronograma = async (estudanteNome) => {
-  try {
-    // Instancia o DAO do estudante
-    const dao = new EstudanteDAO();
+  async buscarCronogramaPorEstudante(estudante, res) {
+    const estudanteId  = estudante._id;
 
-    // Busca o estudante no banco de dados usando o nome
-    const estudante = await dao.buscarEstudantePorNome(estudanteNome);
-
-    // Verifica se o estudante foi encontrado, caso contrário, lança um erro
-    if (!estudante) {
-      throw new Error("Estudante não encontrado");
+    // Validação do ID do estudante
+    if (!estudanteId) {
+      return res.status(400).json({ error: "O ID do estudante é obrigatório." });
     }
 
-    // TODO: verificar se houve atualizações nas matérias desse aluno
-    // Verifica se o estudante já possui um cronograma
-    const cronogramaExistente = await buscarCronogramaPorEstudante(
-      estudante._id
-    );
+    // Chama função de DAO para buscar o cronograma
+    try {
+      return await this.cronogramaDAO.buscarCronogramaPorEstudante(estudanteId);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao buscar cronograma." });
+    }
+  }
 
-    // Caso exista um cronograma, atualiza as matérias com os dados mais recentes
-    if (cronogramaExistente) {
-      const materiaDAO = MateriaDAO;
+  async atualizarMateriasNoCronograma(cronogramaID, materias, res) {
+    if (!cronogramaID) {
+      return res.status(400).json({ error: "ID do cronograma é obrigatório." });
+    }
 
-      // Atualiza as matérias do cronograma com as matérias mais recentes
-      const materiasAtualizadas =
-        await materiaDAO.encontrarMateriasPorEstudante(estudante._id);
+    try {
+      return await this.cronogramaDAO.atualizarMateriasNoCronograma(cronogramaID, materias);
+    } catch (error) {
+      console.error("Erro ao atualizar cronograma:", error.message);
+      return res.status(500).json({ error: "Erro ao atualizar o cronograma." });
+    }
+  }
 
-      const cronogramaAtualizado = cronogramaExistente;
-      cronogramaAtualizado.materias = []; // Limpar as matérias existentes
+  async gerarCronograma(req, res) {
+    const { estudanteNome } = req.params;
+
+    // Validação do parâmetro nome
+    if (!estudanteNome || estudanteNome.trim() === "") {
+      return res.status(400).json({ error: "O nome do estudante é obrigatório." });
+    }
+
+    try {
+
+      // Encontrar o estudante dado o nome passado no parâmetro
+      const estudante = await this.estudanteDAO.buscarEstudantePorNome(estudanteNome);
+
+      // Buscar todas as metérias desse estudante
+      const materiasEstudante = await this.materiaDAO.encontrarMateriasPorEstudante(estudante._id);
 
       let tempoDisponivel = estudante.tempoDisponivel;
 
-      // Loop para alocar o tempo disponível nas matérias, respeitando a prioridade
-      for (const materia of materiasAtualizadas) {
+      // Ordenar as matérias por prioridade (menor número = maior prioridade)
+      materiasEstudante.sort((a, b) => a.prioridade - b.prioridade);
+
+      const materiasCronograma = [];
+      for (const materia of materiasEstudante) {
         if (tempoDisponivel >= materia.tempoEstimado) {
-          cronogramaAtualizado.materias.push({
+          materiasCronograma.push({
+            _id: materia._id,
             nome: materia.nome,
             prioridade: materia.prioridade,
             tempoAlocado: materia.tempoEstimado,
             estudada: materia.estudada,
-            _id: materia._id,
           });
           tempoDisponivel -= materia.tempoEstimado;
         } else if (tempoDisponivel > 0) {
-          cronogramaAtualizado.materias.push({
+          materiasCronograma.push({
+            _id: materia._id,
             nome: materia.nome,
             prioridade: materia.prioridade,
             tempoAlocado: tempoDisponivel,
             estudada: materia.estudada,
-            _id: materia._id,
           });
+          tempoDisponivel = 0;
           break;
         } else {
           break;
         }
       }
 
-      // Atualize o cronograma completo
-      await cronogramaAtualizado.save();
+      // Verificar se esse estudante tem um cronograma
+      let cronogramaEstudante = await this.buscarCronogramaPorEstudante(estudante, res);
 
-      for (const materia of cronogramaAtualizado.materias) {
-        await MateriaDAO.atualizarMateria(materia._id, {
-          tempoAlocado: materia.tempoAlocado,
-        });
-      }
+      if (!cronogramaEstudante) {
 
-      return cronogramaAtualizado; // Retorna o cronograma atualizado
-    }
+        // Gerar um cronograma para o estudante
+        const novoCronograma = await this.cronogramaDAO.gerarCronograma(new Cronograma(estudante._id, materiasCronograma));
 
-    // Caso não haja cronograma existente, cria um novo
-    const materias = await MateriaDAO.encontrarMateriasPorEstudante(
-      estudante._id
-    );
-
-    // Verifica se há matérias cadastradas para o estudante, caso contrário, lança um erro
-    if (materias.length === 0) {
-      throw new Error("Nenhuma matéria cadastrada para esse estudante");
-    }
-
-    // Inicializa o tempo disponível do estudante para alocar nas matérias
-    let tempoDisponivel = estudante.tempoDisponivel;
-    const cronograma = []; // Array que armazenará as matérias e tempos alocados
-
-    // Loop para alocar o tempo disponível nas matérias, respeitando a prioridade
-    for (const materia of materias) {
-      if (tempoDisponivel >= materia.tempoEstimado) {
-        // Se o tempo disponível for suficiente, aloca o tempo total da matéria
-        cronograma.push({
-          nome: materia.nome, // Nome da matéria
-          prioridade: materia.prioridade, // Prioridade da matéria
-          tempoAlocado: materia.tempoEstimado, // Tempo alocado à matéria
-          estudada: materia.estudada, // Estudante já estudou a matéria ou não
-          _id: materia._id, // ID da matéria
-        });
-        // Subtrai o tempo alocado da quantidade de tempo disponível
-        tempoDisponivel -= materia.tempoEstimado;
-      } else if (tempoDisponivel > 0) {
-        // Se o tempo disponível for menor que o necessário, aloca o tempo restante
-        cronograma.push({
-          nome: materia.nome, // Nome da matéria
-          prioridade: materia.prioridade, // Prioridade da matéria
-          tempoAlocado: tempoDisponivel, // Tempo alocado é o que resta disponível
-          estudada: materia.estudada, // Estudante já estudou a matéria ou não
-          _id: materia._id, // ID da matéria
-        });
-        break; // Não há mais tempo disponível para outras matérias
+        if (!novoCronograma) {
+          res.status(500).json({ error: "Erro ao criar o cronograma." });
+        }else{
+          res.status(200).json(novoCronograma);
+        }
       } else {
-        break; // Se não houver mais tempo disponível, encerra o loop
+
+        // Atualizar cronograma existente
+        const cronogramaAtualizado = await this.atualizarMateriasNoCronograma(cronogramaEstudante.id, materiasCronograma, res)
+        res.status(200).json(cronogramaAtualizado);
       }
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao gerar o cronograma." });
     }
-
-    // Cria o novo cronograma e salva no banco de dados
-    const cronogramaSalvo = await Cronograma.create({
-      estudante: estudante._id, // Referência ao estudante no cronograma
-      materias: cronograma, // Lista das matérias alocadas no cronograma
-    });
-
-    return cronogramaSalvo; // Retorna o cronograma salvo
-  } catch (error) {
-    // Em caso de erro, exibe a mensagem no console e lança o erro novamente
-    console.error("Erro ao gerar cronograma:", error);
-    throw error;
   }
-};
 
-// Função para marcar uma matéria como estudada
-const marcarMateriaEstudada = async (materiaId) => {
-  try {
-    // Verifica se o materiaId é um ObjectId válido
-    if (!mongoose.Types.ObjectId.isValid(materiaId)) {
-      throw new Error("ID de matéria inválido");
+  async marcarMateriaEstudada(req, res) {
+    try {
+      const { materiaId } = req.params;
+      const novosDados = {estudada: true}
+
+      const cronogramaAtualizado = await this.cronogramaDAO.marcarMateriaEstudada(materiaId);
+      this.materiaDAO.atualizarMateria(materiaId, novosDados)
+
+      res.status(200).json(cronogramaAtualizado);
+    } catch (error) {
+      console.error("Erro ao marcar matéria como estudada:", error);
+      res.status(500).json({ error: "Erro interno ao atualizar matéria no cronograma." });
     }
-
-    // Busca a matéria para validar se existe no banco
-    const materia = await Materia.findById(materiaId);
-    if (!materia) {
-      throw new Error("Matéria não encontrada");
-    }
-
-    // Marca a matéria como estudada
-    materia.estudada = true;
-    // Salva a matéria atualizada no banco de dados
-    await materia.save();
-
-    // Atualiza o cronograma associado ao estudante da matéria
-    const estudanteId = materia.estudante; // ID do estudante associado à matéria
-    const cronogramaAtualizado = await buscarCronogramaPorEstudante(
-      estudanteId
-    ); // Busca o cronograma atualizado
-
-    return cronogramaAtualizado; // Retorna o cronograma atualizado
-  } catch (error) {
-    console.error("Erro ao marcar matéria como estudada:", error);
-    throw error;
   }
-};
 
-// Exporta as funções para serem usadas em outras partes do código
-module.exports = {
-  gerarCronograma,
-  marcarMateriaEstudada,
-  buscarCronogramaPorEstudante,
-};
+}
+
+module.exports = CronogramaController;
