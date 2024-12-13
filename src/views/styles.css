@@ -1,7 +1,7 @@
 /* Reset básico para garantir consistência de margens e espaçamentos entre navegadores */
 * {
-  margin: 0; /* Remove margens padrão */
-  padding: 0; /* Remove espaçamento padrão */
+  margin: 0;
+  padding: 0;
   box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
 }
 
@@ -9,83 +9,83 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fonte padrão */
   line-height: 1.6; /* Melhor leitura */
-  background-color: #f4f7fc; /* Fundo suave */
+  background-color: #f4f7fc;
   color: #333; /* Cor neutra para o texto */
-  padding: 20px; /* Espaçamento interno */
-  min-height: 100vh; /* Preencher a altura da tela */
+  padding: 20px;
+  min-height: 100vh;
   overflow: auto; /* Adiciona barra de rolagem quando necessário */
 }
 
 /* Título centralizado no topo da página */
 header {
-  text-align: center; /* Centraliza o conteúdo */
-  margin-bottom: 30px; /* Espaçamento inferior */
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 /* Estilo do título principal */
 header h1 {
   font-size: 2.5em; /* Destaque para o título */
   color: #0056b3; /* Azul para destacar o título */
-  margin-bottom: 10px; /* Espaçamento inferior */
+  margin-bottom: 10px;
 }
 
 /* Estrutura principal: ajusta o layout com flexbox */
 main {
   display: flex; /* Alinha os elementos lado a lado */
   flex-wrap: wrap; /* Permite que os elementos sejam empilhados */
-  gap: 20px; /* Espaçamento entre os elementos */
-  justify-content: flex-start; /* Alinhamento à esquerda */
-  margin-bottom: 30px; /* Espaçamento inferior */
+  gap: 20px;
+  justify-content: flex-start;
+  margin-bottom: 30px;
 }
 
 /* Container principal (criar cronograma e criar matéria) */
 .container-principal {
   display: flex; /* Alinha os cartões lado a lado */
-  gap: 20px; /* Espaçamento entre os cartões */
+  gap: 20px;
   flex-wrap: wrap; /* Empilha os cartões em telas menores */
   justify-content: space-between; /* Distribui o espaço entre os cartões */
-  width: 100%; /* Ocupa toda a largura disponível */
+  width: 100%;
 }
 
 /* Cartões de criação (Criar Cronograma e Criar Matéria) */
 .card {
-  background: #fff; /* Fundo branco */
+  background: #fff;
   border: 1px solid #e0e0e0; /* Borda suave */
-  border-radius: 12px; /* Cantos arredondados */
+  border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
-  padding: 30px; /* Espaçamento interno */
+  padding: 30px;
   width: 48%; /* Largura dos cartões */
   transition: transform 0.3s ease-in-out; /* Efeito de hover */
 }
 
-/* T'ítulo dos cartões */
+/* Título dos cartões */
 .card h2 {
   font-size: 1.6em; /* Tamanho do título */
   color: #0056b3; /* Azul para destacar títulos */
-  margin-bottom: 15px; /* Espaçamento inferior */
+  margin-bottom: 15px;
 }
 
 /* Descrição dos cartões */
 .card p {
   color: #777; /* Texto de descrição mais suave */
-  font-size: 1.1em; /* Tamanho do texto */
+  font-size: 1.1em;
 }
 
 /* Container de 'Gerar Cronograma' e 'Editar Materiais' mais abaixo */
 .container-secundario {
   display: flex; /* Alinha os elementos lado a lado */
   flex-direction: column; /* Empilha os elementos em telas menores */
-  gap: 20px; /* Espaçamento entre os elementos */
-  width: 100%; /* Ocupa toda a largura disponível */
+  gap: 20px;
+  width: 100%;
 }
 
 /* Estilo do container de 'Gerar Cronograma' */
 #resultado-cronograma {
-  background-color: #fff; /* Fundo branco */
+  background-color: #fff;
   border: 1px solid #ddd; /* Borda suave */
-  border-radius: 12px; /* Cantos arredondados */
-  padding: 20px; /* Espaçamento interno */
-  min-height: 400px; /* Altura mínima */
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 400px;
   overflow-y: auto; /* Adiciona barra de rolagem vertical */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
@@ -106,9 +106,9 @@ main {
 
 /* Estilo para cabeçalhos e linhas alternadas */
 #resultado-cronograma th {
-  background-color: #f9f9f9; /* Fundo cinza claro para cabeçalhos */
-  color: #0056b3; /* Cor do texto do cabeçalho */
-  font-weight: bold; /* Texto em negrito */
+  background-color: #f9f9f9;
+  color: #0056b3;
+  font-weight: bold;
 }
 
 #resultado-cronograma tr:nth-child(even) {
@@ -116,50 +116,50 @@ main {
 }
 
 #resultado-cronograma tr:hover {
-  background-color: #f1f1f1; /* Destaque ao passar o mouse */
+  background-color: #f1f1f1;
 }
 
 /* Estilo para 'Editar Materiais' */
 #editar-materias {
-  background-color: #fff; /* Fundo branco */
+  background-color: #fff;
   border: 1px solid #ddd; /* Borda suave */
-  border-radius: 12px; /* Cantos arredondados */
-  padding: 20px; /* Espaçamento interno */
-  min-height: 300px; /* Altura mínima */
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
 }
 
 /* Título 'Editar Materiais' */
 #editar-materias h2 {
   color: #0056b3; /* Azul para destacar o título */
-  margin-bottom: 15px; /* Espaçamento inferior */
+  margin-bottom: 15px;
 }
 
 /* Rodapé: centralizado e com tom discreto */
 footer {
   text-align: center;
-  margin-top: 40px; /* Espaçamento superior */
-  font-size: 0.9em; /* Texto menor */
-  color: #777; /* Cor mais clara */
+  margin-top: 40px;
+  font-size: 0.9em;
+  color: #777;
 }
 
 /* Estilo para botões */
 button {
   background-color: #0056b3; /* Azul para destacar */
-  color: white; /* Texto branco */
-  padding: 12px 20px; /* Espaçamento interno */
-  border: none; /* Remove a borda */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Muda o cursor ao passar por cima */
-  font-size: 1.1em; /* Tamanho do texto */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1em;
   transition: background-color 0.3s; /* Efeito de hover */
-  width: 100%; /* Ocupa toda a largura disponível */
-  margin-top: 20px; /* Espaçamento entre o botão e os elementos acima */
-  margin-bottom: 20px; /* Espaçamento entre o botão e os elementos abaixo */
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 button:hover {
-  background-color: #003d80; /* Escurece o azul ao passar o mouse */
+  background-color: #003d80;
 }
 
 button:focus {
@@ -171,10 +171,10 @@ input,
 select,
 textarea {
   width: 100%; /* Ocupa toda a largura disponível */
-  padding: 12px; /* Espaçamento interno */
+  padding: 12px;
   border: 1px solid #ddd; /* Borda suave */
-  border-radius: 6px; /* Cantos arredondados */
-  font-size: 1.1em; /* Tamanho do texto */
+  border-radius: 6px;
+  font-size: 1.1em;
   margin-top: 15px; /* Espaço maior entre os campos de entrada */
   box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
   transition: border-color 0.3s; /* Efeito de transição */
@@ -192,8 +192,8 @@ textarea:focus {
 .tooltip-icon {
   font-size: 18px; /* Tamanho do ícone */
   color: #0056b3; /* Azul para destacar */
-  cursor: pointer; /* Muda o cursor ao passar por cima */
-  margin-left: 8px; /* Espaçamento à esquerda */
+  cursor: pointer;
+  margin-left: 8px;
   align-items: center; /* Alinha verticalmente */
 }
 

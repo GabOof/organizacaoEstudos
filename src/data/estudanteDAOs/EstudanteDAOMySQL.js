@@ -32,7 +32,7 @@ class EstudanteDAOMySQL extends EstudanteDAOInterface {
         }
     }
 
-    // Salvar um estudante no banco de dados
+    // Salvar um estudante no banco de dados, recebe um objeto "estudante" e insere os dados na tabela "estudantes"
     async salvarEstudante(estudante) {
         const query = `INSERT INTO estudantes (nome, tempoDisponivel) VALUES (?, ?)`;
         const params = [estudante.nome, estudante.tempoDisponivel];
@@ -46,7 +46,7 @@ class EstudanteDAOMySQL extends EstudanteDAOInterface {
         }
     }
 
-    // Buscar estudante pelo nome no banco de dados
+    // Buscar estudante pelo nome no banco de dados, retorna um array com os estudantes encontrados com o nome correspondente
     async buscarEstudantePorNome(nome) {
         const query = `SELECT * FROM estudantes WHERE nome = ?`;
         const params = [nome];
@@ -60,7 +60,7 @@ class EstudanteDAOMySQL extends EstudanteDAOInterface {
         }
     }
 
-    // Buscar estudante pelo ID no banco de dado mysql
+    // Buscar estudante pelo ID no banco de dado mysql, retorna o estudante correspondente ao ID informado ou null se não encontrado
     async buscarEstudantePorId(id) {
         const query = `SELECT * FROM estudantes WHERE id = ?`;
         const params = [id];

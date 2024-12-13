@@ -237,12 +237,12 @@ document
     try {
       // Faz a requisição para editar a matéria no cronograma
       const response = await fetch(
-        `${API_URL}/cronograma/editar/${materiaId}`,
+        `${API_URL}/materia/editar/${materiaId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            tempoAlocado: novoTempo,
+            tempoEstimado: novoTempo,
             prioridade: novaPrioridade,
           }),
         }

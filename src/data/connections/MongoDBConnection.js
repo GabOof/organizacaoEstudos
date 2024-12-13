@@ -19,9 +19,7 @@ class MongoDBConnection extends DatabaseConnection {
         }
     }
 
-    /**
-     * Fecha a conexão com o MongoDB
-     */
+    // Fecha a conexão com o MongoDB
     async disconnect() {
         try {
             await mongoose.disconnect();
