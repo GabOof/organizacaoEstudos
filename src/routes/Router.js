@@ -26,11 +26,16 @@ class Router {
 
   // Método para configurar as rotas da aplicação
   configureRoutes() {
-
     // Instanciando os controllers de models
-    const estudanteController = new EstudanteController(new EstudanteDAOMongo());
+    const estudanteController = new EstudanteController(
+      new EstudanteDAOMongo()
+    );
     const materiaController = new MateriaController(new MateriaDAOMongo());
-    const cronogramaController = new CronogramaController(new CronogramaDAOMongo(), new EstudanteDAOMongo(), new MateriaDAOMongo());
+    const cronogramaController = new CronogramaController(
+      new CronogramaDAOMongo(),
+      new EstudanteDAOMongo(),
+      new MateriaDAOMongo()
+    );
 
     // Rota para criar um estudante
     this.app.post(
@@ -40,32 +45,40 @@ class Router {
 
     // Rota para criar uma matéria
     this.app.post(
-        "/materia",
-        async (req, res) => await materiaController.salvarMateria(req, res)
+      "/materia",
+      async (req, res) => await materiaController.salvarMateria(req, res)
     );
 
     // Rota para buscar estudante pelo nome
     this.app.get(
-        "/estudante/nome/:nome",
-        async (req, res) => await estudanteController.buscarEstudantePorNome(req, res)
+      "/estudante/nome/:nome",
+      async (req, res) =>
+        await estudanteController.buscarEstudantePorNome(req, res)
     );
 
     // Rota para gerar o cronograma
     this.app.get(
-        "/cronograma/:estudanteNome",
-        async (req, res) => await cronogramaController.gerarCronograma(req, res)
+      "/cronograma/:estudanteNome",
+      async (req, res) => await cronogramaController.gerarCronograma(req, res)
     );
 
     // Rota para marcar uma matéria como estudada
     this.router.post(
-        "/materia/estudar/:materiaId",
-        async (req, res) => await cronogramaController.marcarMateriaEstudada(req, res)
+      "/materia/estudar/:materiaId",
+      async (req, res) =>
+        await cronogramaController.marcarMateriaEstudada(req, res)
     );
 
     // Rota para marcar uma matéria como estudada
     this.app.post(
-        "/materia/editar/:materiaId",
-        async (req, res) => await materiaController.atualizarMateria(req, res)
+      "/materia/editar/:materiaId",
+      async (req, res) => await materiaController.atualizarMateria(req, res)
+    );
+
+    // Rota para excluir matéria
+    this.app.delete(
+      "/materia/excluir/:materiaId",
+      async (req, res) => await materiaController.excluirMateria(req, res)
     );
 
     // Middleware para tratamento de erros
