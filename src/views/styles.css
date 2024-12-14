@@ -166,6 +166,15 @@ button:focus {
   outline: none; /* Remove a borda ao focar */
 }
 
+/* Estilo para botão de exclusão */
+button.excluir {
+  background-color: #d9534f; /* Vermelho para o botão de exclusão */
+}
+
+button.excluir:hover {
+  background-color: #c9302c; /* Tom mais escuro de vermelho ao passar o mouse */
+}
+
 /* Melhorar a aparência dos inputs */
 input,
 select,

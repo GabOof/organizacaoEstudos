@@ -236,17 +236,14 @@ document
 
     try {
       // Faz a requisição para editar a matéria no cronograma
-      const response = await fetch(
-        `${API_URL}/materia/editar/${materiaId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            tempoEstimado: novoTempo,
-            prioridade: novaPrioridade,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/materia/editar/${materiaId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tempoEstimado: novoTempo,
+          prioridade: novaPrioridade,
+        }),
+      });
       const data = await response.json();
 
       // Verifica se a requisição foi bem-sucedida
@@ -260,5 +257,58 @@ document
       }
     } catch (error) {
       alert("Erro ao conectar ao servidor");
+    }
+  });
+
+// Função para excluir matéria do cronograma com confirmação
+document
+  .getElementById("btn-excluir")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Previne o comportamento de submit do formulário
+
+    const materiaId = document.getElementById("materia-id").value;
+
+    // Verifica se foi inserido um ID válido
+    if (materiaId) {
+      // Exibe uma caixa de confirmação antes de excluir
+      const confirmDelete = confirm(
+        "Você tem certeza que deseja excluir esta matéria?"
+      );
+
+      if (confirmDelete) {
+        // Se o usuário confirmar, realiza a exclusão
+        fetch(`http://localhost:3000/materia/excluir/${materiaId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Erro ao excluir a matéria");
+            }
+            return response.json(); // Espera-se que a resposta seja em JSON
+          })
+          .then((data) => {
+            if (data.message === "Matéria excluída com sucesso") {
+              alert(`A matéria com ID ${materiaId} foi excluída.`);
+              // Limpa os campos após a exclusão
+              document.getElementById("materia-id").value = "";
+              document.getElementById("novo-tempo").value = "";
+              document.getElementById("nova-prioridade").value = "";
+            } else {
+              alert("Erro ao excluir a matéria: " + data.error);
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao excluir matéria:", error);
+            alert("Ocorreu um erro ao excluir a matéria.");
+          });
+      } else {
+        // Se o usuário cancelar a exclusão
+        alert("A exclusão foi cancelada.");
+      }
+    } else {
+      alert("Por favor, insira um ID válido de matéria.");
     }
   });

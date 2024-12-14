@@ -1,7 +1,6 @@
 const Cronograma = require("../models/cronograma");
 
 class CronogramaController {
-
   // Construtor recebe dependências do DAO do cronograma, estudante e matéria
   constructor(cronogramaDAO, estudanteDAO, materiaDAO) {
     this.cronogramaDAO = cronogramaDAO;
@@ -11,11 +10,13 @@ class CronogramaController {
 
   // Buscar o cronograma de um estudante
   async buscarCronogramaPorEstudante(estudante, res) {
-    const estudanteId  = estudante._id;
+    const estudanteId = estudante._id;
 
     // Validação para garantir que o ID do estudante seja fornecido
     if (!estudanteId) {
-      return res.status(400).json({ error: "O ID do estudante é obrigatório." });
+      return res
+        .status(400)
+        .json({ error: "O ID do estudante é obrigatório." });
     }
 
     // Chama o DAO para buscar o cronograma do estudante pelo ID
@@ -35,7 +36,10 @@ class CronogramaController {
 
     // Chama o DAO para atualizar as matérias no cronograma pelo ID
     try {
-      return await this.cronogramaDAO.atualizarMateriasNoCronograma(cronogramaID, materias);
+      return await this.cronogramaDAO.atualizarMateriasNoCronograma(
+        cronogramaID,
+        materias
+      );
     } catch (error) {
       console.error("Erro ao atualizar cronograma:", error.message);
       return res.status(500).json({ error: "Erro ao atualizar o cronograma." });
@@ -48,16 +52,25 @@ class CronogramaController {
 
     // Validação para garantir que o nome do estudante seja fornecido
     if (!estudanteNome || estudanteNome.trim() === "") {
-      return res.status(400).json({ error: "O nome do estudante é obrigatório." });
+      return res
+        .status(400)
+        .json({ error: "O nome do estudante é obrigatório." });
     }
 
     try {
-
       // Encontra o estudante pelo nome utilizando o DAO
-      const estudante = await this.estudanteDAO.buscarEstudantePorNome(estudanteNome);
+      const estudante = await this.estudanteDAO.buscarEstudantePorNome(
+        estudanteNome
+      );
 
-      // Buscar todas as metérias desse estudante
-      const materiasEstudante = await this.materiaDAO.encontrarMateriasPorEstudante(estudante._id);
+      // Se o estudante não for encontrado
+      if (!estudante) {
+        return res.status(404).json({ error: "Estudante não encontrado." });
+      }
+
+      // Buscar todas as matérias desse estudante
+      const materiasEstudante =
+        await this.materiaDAO.encontrarMateriasPorEstudante(estudante._id);
 
       let tempoDisponivel = estudante.tempoDisponivel;
 
@@ -91,21 +104,29 @@ class CronogramaController {
       }
 
       // Verifica se já existe um cronograma para o estudante
-      let cronogramaEstudante = await this.buscarCronogramaPorEstudante(estudante, res);
+      let cronogramaEstudante =
+        await this.cronogramaDAO.buscarCronogramaPorEstudante(estudante._id);
 
       if (!cronogramaEstudante) {
-
         // Se não houver cronograma, cria um novo
-        const novoCronograma = await this.cronogramaDAO.gerarCronograma(new Cronograma(estudante._id, materiasCronograma));
+        const novoCronograma = await this.cronogramaDAO.gerarCronograma(
+          new Cronograma(estudante._id, materiasCronograma)
+        );
 
         if (!novoCronograma) {
           res.status(500).json({ error: "Erro ao criar o cronograma." });
-        }else{
+        } else {
           res.status(200).json(novoCronograma);
         }
       } else {
         // Se houver cronograma, atualiza as matérias no cronograma existente
-        const cronogramaAtualizado = await this.atualizarMateriasNoCronograma(cronogramaEstudante.id, materiasCronograma, res)
+        cronogramaEstudante.materias = materiasCronograma; // Atualiza as matérias
+        const cronogramaAtualizado =
+          await this.cronogramaDAO.atualizarMateriasNoCronograma(
+            cronogramaEstudante._id, // O ID do cronograma
+            cronogramaEstudante.materias // As novas matérias
+          );
+
         res.status(200).json(cronogramaAtualizado);
       }
     } catch (error) {
@@ -118,18 +139,21 @@ class CronogramaController {
   async marcarMateriaEstudada(req, res) {
     try {
       const { materiaId } = req.params;
-      const novosDados = {estudada: true}
+      const novosDados = { estudada: true };
 
       // Atualiza o cronograma marcando a matéria como estudada
-      const cronogramaAtualizado = await this.cronogramaDAO.marcarMateriaEstudada(materiaId);
+      const cronogramaAtualizado =
+        await this.cronogramaDAO.marcarMateriaEstudada(materiaId);
 
       // Atualiza a matéria no banco para marcar como estudada
-      this.materiaDAO.atualizarMateria(materiaId, novosDados)
+      this.materiaDAO.atualizarMateria(materiaId, novosDados);
 
       res.status(200).json(cronogramaAtualizado);
     } catch (error) {
       console.error("Erro ao marcar matéria como estudada:", error);
-      res.status(500).json({ error: "Erro interno ao atualizar matéria no cronograma." });
+      res
+        .status(500)
+        .json({ error: "Erro interno ao atualizar matéria no cronograma." });
     }
   }
 }
