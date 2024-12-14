@@ -1,0 +1,218 @@
+/* Reset básico para garantir consistência de margens e espaçamentos entre navegadores */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
+}
+
+/* Corpo da página: fonte, cores e espaçamento */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fonte padrão */
+  line-height: 1.6; /* Melhor leitura */
+  background-color: #f4f7fc;
+  color: #333; /* Cor neutra para o texto */
+  padding: 20px;
+  min-height: 100vh;
+  overflow: auto; /* Adiciona barra de rolagem quando necessário */
+}
+
+/* Título centralizado no topo da página */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Estilo do título principal */
+header h1 {
+  font-size: 2.5em; /* Destaque para o título */
+  color: #0056b3; /* Azul para destacar o título */
+  margin-bottom: 10px;
+}
+
+/* Estrutura principal: ajusta o layout com flexbox */
+main {
+  display: flex; /* Alinha os elementos lado a lado */
+  flex-wrap: wrap; /* Permite que os elementos sejam empilhados */
+  gap: 20px;
+  justify-content: flex-start;
+  margin-bottom: 30px;
+}
+
+/* Container principal (criar cronograma e criar matéria) */
+.container-principal {
+  display: flex; /* Alinha os cartões lado a lado */
+  gap: 20px;
+  flex-wrap: wrap; /* Empilha os cartões em telas menores */
+  justify-content: space-between; /* Distribui o espaço entre os cartões */
+  width: 100%;
+}
+
+/* Cartões de criação (Criar Cronograma e Criar Matéria) */
+.card {
+  background: #fff;
+  border: 1px solid #e0e0e0; /* Borda suave */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+  padding: 30px;
+  width: 48%; /* Largura dos cartões */
+  transition: transform 0.3s ease-in-out; /* Efeito de hover */
+}
+
+/* Título dos cartões */
+.card h2 {
+  font-size: 1.6em; /* Tamanho do título */
+  color: #0056b3; /* Azul para destacar títulos */
+  margin-bottom: 15px;
+}
+
+/* Descrição dos cartões */
+.card p {
+  color: #777; /* Texto de descrição mais suave */
+  font-size: 1.1em;
+}
+
+/* Container de 'Gerar Cronograma' e 'Editar Materiais' mais abaixo */
+.container-secundario {
+  display: flex; /* Alinha os elementos lado a lado */
+  flex-direction: column; /* Empilha os elementos em telas menores */
+  gap: 20px;
+  width: 100%;
+}
+
+/* Estilo do container de 'Gerar Cronograma' */
+#resultado-cronograma {
+  background-color: #fff;
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 400px;
+  overflow-y: auto; /* Adiciona barra de rolagem vertical */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Título 'Resultado do Cronograma' */
+#resultado-cronograma table {
+  width: 100%; /* Ajusta a tabela à largura do container */
+  border-collapse: collapse; /* Remove espaçamento entre células */
+}
+
+/* Estilo para células da tabela */
+#resultado-cronograma th,
+#resultado-cronograma td {
+  border: 1px solid #ddd; /* Bordas discretas */
+  text-align: left; /* Alinhamento do texto */
+  padding: 12px; /* Espaçamento interno */
+}
+
+/* Estilo para cabeçalhos e linhas alternadas */
+#resultado-cronograma th {
+  background-color: #f9f9f9;
+  color: #0056b3;
+  font-weight: bold;
+}
+
+#resultado-cronograma tr:nth-child(even) {
+  background-color: #f9f9f9; /* Alternância de cores mais suave */
+}
+
+#resultado-cronograma tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilo para 'Editar Materiais' */
+#editar-materias {
+  background-color: #fff;
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+}
+
+/* Título 'Editar Materiais' */
+#editar-materias h2 {
+  color: #0056b3; /* Azul para destacar o título */
+  margin-bottom: 15px;
+}
+
+/* Rodapé: centralizado e com tom discreto */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Estilo para botões */
+button {
+  background-color: #0056b3; /* Azul para destacar */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s; /* Efeito de hover */
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #003d80;
+}
+
+button:focus {
+  outline: none; /* Remove a borda ao focar */
+}
+
+/* Estilo para botão de exclusão */
+button.excluir {
+  background-color: #d9534f; /* Vermelho para o botão de exclusão */
+}
+
+button.excluir:hover {
+  background-color: #c9302c; /* Tom mais escuro de vermelho ao passar o mouse */
+}
+
+/* Melhorar a aparência dos inputs */
+input,
+select,
+textarea {
+  width: 100%; /* Ocupa toda a largura disponível */
+  padding: 12px;
+  border: 1px solid #ddd; /* Borda suave */
+  border-radius: 6px;
+  font-size: 1.1em;
+  margin-top: 15px; /* Espaço maior entre os campos de entrada */
+  box-sizing: border-box; /* Inclui bordas e preenchimento no cálculo do tamanho */
+  transition: border-color 0.3s; /* Efeito de transição */
+}
+
+/* Destaque ao focar nos campos de entrada */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0056b3; /* Destaque ao focar */
+  outline: none; /* Remove a borda padrão */
+}
+
+/* Tooltip Icon */
+.tooltip-icon {
+  font-size: 18px; /* Tamanho do ícone */
+  color: #0056b3; /* Azul para destacar */
+  cursor: pointer;
+  margin-left: 8px;
+  align-items: center; /* Alinha verticalmente */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-principal {
+    flex-direction: column; /* Empilha os cartões em telas menores */
+  }
+
+  .card {
+    width: 100%; /* Cartões ocupam toda a largura em telas pequenas */
+  }
+}
